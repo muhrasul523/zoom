@@ -300,7 +300,7 @@
         let refreshInterval = null; 
         let customVars = []; 
         let dynamicOptionMaps = {}; 
-        let isSimulation = true;
+        let isSimulation = false;
 
         // --- FETCH API WRAPPER (Pengganti google.script.run) ---
         async function fetchAPI(action, payloadData = null) {
@@ -330,7 +330,7 @@
             const params = new URLSearchParams(window.location.search);
             const page = params.get('page') || 'admin';
 
-            if (SCRIPT_URL === "URL_APPSCRIPT_ANDA_DISINI" || SCRIPT_URL.trim() === "") {
+            if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz8TLfeiaLd6nkBrA06Wpr5dO8U8pT1kToYU6_U3i03AEJ8ezPGvlJ2ppsXFIhjc68-/exec" || SCRIPT_URL.trim() === "") {
                 Swal.fire('Mode Simulasi', 'URL Apps Script belum diisi di kode HTML. Mengaktifkan dummy data.', 'info');
                 isSimulation = true;
             }
