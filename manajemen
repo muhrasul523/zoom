@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Management & Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        // ==========================================
+        // KONFIGURASI API
+        // ==========================================
+        // WAJIB: Ganti URL di bawah dengan Web App URL Google Apps Script Anda yang baru.
+        const SCRIPT_URL = "URL_APPSCRIPT_ANDA_DISINI"; 
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; color: #2c3e50; }
+        .hidden { display: none !important; }
+        
+        .navbar-custom { background: linear-gradient(135deg, #0b5cff 0%, #003db3 100%); }
+        
+        .card-custom { border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; background: #fff; }
+        .card-custom:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .card-pinned { border: 2px solid #0b5cff; }
+        
+        .status-badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-Mulai { background-color: #0b5cff; color: #fff; border: 1px solid #0b5cff; }
+        .status-Aktif { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        .status-Tidak_Aktif { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        .status-Selesai { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+
+        .status-Terdaftar { background-color: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .status-Tamu { background-color: #fff3cd; color: #856404; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+
+        .btn:disabled, .btn[disabled] { opacity: 0.5; filter: grayscale(50%); cursor: not-allowed; pointer-events: none; }
+
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .join-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: #f0f4f8; }
+        .join-card { max-width: 520px; width: 100%; border-top: 6px solid #0b5cff; overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: visible;}
+        
+        .join-header { background: #fff; padding: 30px 20px 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .join-header .icon-box { display: flex; align-items: center; justify-content: center; width: 70px; height: 70px; background: #eef3ff; color: #0b5cff; border-radius: 50%; margin: 0 auto 15px; font-size: 32px; box-shadow: 0 4px 15px rgba(11,92,255,0.15); transition: transform 0.2s; text-decoration: none;}
+        .join-header .icon-box:hover { transform: scale(1.05); color: #0046d5; }
+        .join-body { padding: 30px; }
+        
+        .input-group-custom { position: relative; }
+        .input-group-custom .icon-input { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #0b5cff; font-size: 1.2rem; z-index: 10;}
+        .input-group-custom input { padding-left: 50px; height: 55px; border-radius: 12px; font-size: 1.05rem; border: 2px solid #e1e8ed; transition: all 0.3s; width: 100%;}
+        .input-group-custom input:focus { border-color: #0b5cff; box-shadow: 0 0 0 4px rgba(11,92,255,0.1); outline: none; }
+        
+        .form-check-custom { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 10px; padding: 12px 15px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center;}
+        .form-check-custom:hover { background: #eef3ff; border-color: #a0c1ff; }
+        .form-check-custom input { width: 1.2rem; height: 1.2rem; margin-right: 12px; margin-top:0; cursor: pointer; }
+        .form-check-custom label { margin:0; cursor: pointer; width:100%; font-weight: 500;}
+
+        .custom-dropdown-container { position: relative; width: 100%; }
+        .custom-dropdown-list { display: none; margin-top: 5px; max-height: 250px; overflow-y: auto; position: relative; z-index: 1050; border-radius: 12px; background: #fff; padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        .custom-dropdown-list.show { display: block; }
+        .custom-opt { padding: 12px 20px; cursor: pointer; font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid #f8f9fa; transition: background 0.2s; list-style: none; }
+        .custom-opt:last-child { border-bottom: none; }
+        .custom-opt:hover { background: #eef3ff; color: #0b5cff; }
+
+        .btn-join { height: 55px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; background: linear-gradient(135deg, #0b5cff 0%, #0046d5 100%); border: none; transition: all 0.3s; color: white;}
+        .btn-join:hover { background: linear-gradient(135deg, #0046d5 0%, #0036a3 100%); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(11,92,255,0.3); color: white; }
+
+        .fade-step { animation: fadeInUp 0.3s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .uppercase-input { text-transform: uppercase; font-weight: 600; }
+        .uppercase-input::placeholder { text-transform: none; font-weight: 400; color: #aaa; }
+
+        .var-row { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; padding-top: 25px; border-radius: 8px; margin-bottom: 12px; position: relative;}
+        .var-row .btn-remove { position: absolute; top: 5px; right: 5px; border-radius: 50%; padding: 0; width: 24px; height: 24px; font-size: 14px; display: flex; align-items: center; justify-content: center;}
+        
+        .cat-box { display: inline-block; background: #e9ecef; border-radius: 20px; padding: 5px 15px; margin: 3px; font-size: 0.85rem; cursor: pointer; border: 1px solid transparent;}
+        .cat-box input { display: none; }
+        .cat-box.checked { background: #cce5ff; border-color: #0b5cff; color: #004085; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem; border-width: 4px;" role="status"></div>
+        <h5 class="fw-bold text-secondary" id="loadingText">Memuat Sistem...</h5>
+    </div>
+
+    <!-- ADMIN VIEW -->
+    <div id="adminView" class="hidden">
+        <nav class="navbar navbar-dark navbar-custom shadow-sm mb-4">
+            <div class="container">
+                <span class="navbar-brand fw-bold fs-4"><i class="bi bi-camera-video me-2"></i> Zoom Admin Workspace</span>
+                <span class="text-white opacity-75 small">Manajemen Registrasi</span>
+            </div>
+        </nav>
+
+        <div class="container pb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h4 class="fw-bold m-0 text-dark">Daftar Meeting</h4>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-dark fw-bold shadow-sm rounded-3" onclick="copyGlobalLink()">
+                        <i class="bi bi-link-45deg fs-5 align-middle"></i> Salin Link Registrasi Aktif
+                    </button>
+                    <div class="btn-group shadow-sm bg-white rounded-3">
+                        <button class="btn btn-outline-primary border-0" id="btnGallery" onclick="toggleView('gallery')" title="Galeri"><i class="bi bi-grid-fill"></i></button>
+                        <button class="btn btn-outline-primary border-0" id="btnList" onclick="toggleView('list')" title="Daftar"><i class="bi bi-list-ul"></i></button>
+                    </div>
+                    <button class="btn btn-primary fw-bold px-4 shadow-sm rounded-3" onclick="openModal('add')">
+                        <i class="bi bi-plus-circle-fill me-2"></i> Buat Meeting
+                    </button>
+                </div>
+            </div>
+            
+            <div id="meetingList"></div> 
+        </div>
+    </div>
+
+    <!-- JOIN VIEW -->
+    <div id="joinView" class="hidden join-wrapper">
+        <div class="join-card">
+            <div class="join-header">
+                <!-- Tombol kembali ke admin -->
+                <a href="?page=admin" class="icon-box" title="Kembali ke Halaman Admin">
+                    <i class="bi bi-headset"></i>
+                </a>
+                <h4 class="fw-bold text-dark mb-2" id="joinMeetingName">Memuat Data...</h4>
+                <div class="d-inline-flex align-items-center bg-light rounded-pill px-3 py-1">
+                    <i class="bi bi-calendar2-event text-primary me-2"></i> 
+                    <span id="joinMeetingDate" class="text-muted small fw-semibold">Mohon tunggu</span>
+                </div>
+            </div>
+
+            <div class="join-body">
+                <div id="step1" class="fade-step">
+                    <form onsubmit="handleCheckWA(event)">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-2">Masukkan Nomor WhatsApp Anda</label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-whatsapp icon-input text-success"></i>
+                                <input type="tel" class="form-control" id="inputWaJoin" 
+                                    placeholder="Contoh: 6281234..." required 
+                                    oninput="formatWAInput(this)" autocomplete="off">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn w-100 btn-join" id="btnCheckWa">
+                            Verifikasi & Masuk <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="step2" class="hidden fade-step">
+                    <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+                        <button type="button" class="btn btn-sm btn-light border me-2" onclick="backToStep1()" title="Kembali"><i class="bi bi-arrow-left"></i></button>
+                        <h5 class="fw-bold text-dark m-0" id="titleStep2">Lengkapi Data Anda</h5>
+                    </div>
+                    <form onsubmit="handleJoinDynamic(event)">
+                        <div id="dynamicFormContainer"></div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn w-100 btn-join" id="btnJoinUnreg">
+                                Join Zoom <i class="bi bi-camera-video ms-1"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM MEETING -->
+    <div class="modal fade" id="meetingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold fs-4" id="modalTitle">Form Meeting</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body p-4 pt-2">
+                    <ul class="nav nav-pills nav-justified mb-4 border rounded p-1 bg-light" id="meetingTabs" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold" id="tab-meeting" data-bs-toggle="pill" data-bs-target="#pane-meeting" type="button" role="tab">1. Info Meeting</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="tab-participant" data-bs-toggle="pill" data-bs-target="#pane-participant" type="button" role="tab">2. Partisipan & Form</button>
+                      </li>
+                    </ul>
+
+                    <form id="meetingForm" onsubmit="handleFormSubmit(event)">
+                        <div class="tab-content" id="meetingTabsContent">
+                            <!-- TAB 1 -->
+                            <div class="tab-pane fade show active" id="pane-meeting" role="tabpanel">
+                                <input type="hidden" id="inputId">
+                                <input type="hidden" id="inputStatus">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">Nama Meeting</label>
+                                        <input type="text" class="form-control" id="inputNama">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">Tanggal</label>
+                                        <input type="date" class="form-control" id="inputTanggal">
+                                    </div>
+                                </div>
+                                <div class="mb-4 p-3 bg-light rounded-3 border">
+                                    <label class="form-label fw-bold text-primary mb-1"><i class="bi bi-link-45deg"></i> Paste Link Zoom Disini</label>
+                                    <input type="url" class="form-control" id="inputLink" placeholder="https://us05web.zoom.us/j/..." oninput="autoExtractZoom(this.value)">
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6 mb-2 mb-sm-0">
+                                            <label class="form-label fw-semibold small">Meeting ID</label>
+                                            <input type="text" class="form-control font-monospace" id="inputZoomId">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label fw-semibold small">Password</label>
+                                            <input type="text" class="form-control font-monospace" id="inputPwd">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2 -->
+                            <div class="tab-pane fade" id="pane-participant" role="tabpanel">
+                                <div class="mb-3 p-3 border rounded bg-white">
+                                    <label class="form-label fw-bold text-dark"><i class="bi bi-people-fill me-2"></i>Kategori Whitelist</label>
+                                    <div id="kategoriContainer" class="d-flex flex-wrap border rounded p-2 bg-light mt-1" style="min-height: 50px;"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark m-0"><i class="bi bi-ui-checks-grid me-2"></i>Form Registrasi Tamu (Max 5)</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary fw-bold py-1" onclick="addCustomVar()" id="btnAddVar">+ Tambah</button>
+                                </div>
+                                <div id="customVarsContainer"></div>
+                                
+                                <div class="mt-3 p-3 border rounded-3 bg-white">
+                                    <label class="form-label fw-bold text-primary">Format Nama Zoom Otomatis</label>
+                                    <input type="text" class="form-control fw-bold mt-1" id="inputNameFormat" placeholder="Cth: {variabel_3} - {variabel_1}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-3 px-0 pb-0">
+                            <button type="button" class="btn btn-light fw-semibold px-4" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-primary fw-bold px-4" id="btnSave" onclick="saveMeetingManual()">Simpan Meeting</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL ANALYTICS -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold fs-4">Analytics & Kehadiran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="loadingAnalytics" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 text-muted">Memuat data aktivitas...</p>
+                    </div>
+                    <div id="contentAnalytics" class="hidden">
+                        <div class="row mb-4 g-2">
+                            <div class="col-6 col-md-3 mb-2"><div class="card bg-secondary text-white text-center p-3 rounded-4 border-0 shadow-sm"><h4 id="statTarget" class="fw-bold mb-0">0</h4><small>Target Whitelist</small></div></div>
+                            <div class="col-6 col-md-3 mb-2"><div class="card bg-primary text-white text-center p-3 rounded-4 border-0 shadow-sm"><h4 id="statTotal" class="fw-bold mb-0">0</h4><small>Total Hadir</small></div></div>
+                            <div class="col-6 col-md-3 mb-2"><div class="card bg-success text-white text-center p-3 rounded-4 border-0 shadow-sm"><h4 id="statTerdaftar" class="fw-bold mb-0">0</h4><small>Terdaftar</small></div></div>
+                            <div class="col-6 col-md-3 mb-2"><div class="card bg-warning text-dark text-center p-3 rounded-4 border-0 shadow-sm"><h4 id="statTamu" class="fw-bold mb-0">0</h4><small>Tamu</small></div></div>
+                        </div>
+                        <h6 class="fw-bold mb-3 text-dark">Daftar Aktivitas Terbaru</h6>
+                        <div class="table-responsive border rounded-3" style="max-height: 350px;">
+                            <table class="table table-hover table-sm mb-0">
+                                <thead class="table-light position-sticky top-0" style="z-index:1;">
+                                    <tr><th class="ps-3 py-2">Waktu (WITA)</th><th>WhatsApp</th><th>Nama Input/Asli</th><th>Status</th><th class="text-center pe-3">Total Akses</th></tr>
+                                </thead>
+                                <tbody id="detailTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // --- GLOBAL STATE ---
+        let dbMeetings = []; 
+        let dbCategories = [];
+        let dbTemplateOpsi = []; 
+        let modalInstance = null;
+        let detailModalInstance = null; 
+        let currentView = 'gallery';
+        let currentPage = 'admin'; 
+        let currentJoinMeetingData = null; 
+        let refreshInterval = null; 
+        let customVars = []; 
+        let dynamicOptionMaps = {}; 
+        let isSimulation = false;
+
+        // --- FETCH API WRAPPER (Pengganti google.script.run) ---
+        async function fetchAPI(action, payloadData = null) {
+            if (isSimulation) return simulateAPI(action, payloadData);
+
+            if (payloadData === null) {
+                // Gunakan GET untuk fetch data
+                const url = new URL(SCRIPT_URL);
+                url.searchParams.append('action', action);
+                const response = await fetch(url);
+                return await response.json();
+            } else {
+                // Gunakan POST (text/plain) untuk Write Data menghindari Preflight CORS
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: action, data: payloadData })
+                });
+                return await response.json();
+            }
+        }
+
+        window.onload = function() {
+            modalInstance = new bootstrap.Modal(document.getElementById('meetingModal'));
+            detailModalInstance = new bootstrap.Modal(document.getElementById('detailModal'));
+            
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page') || 'admin';
+
+            if (SCRIPT_URL === "URL_APPSCRIPT_ANDA_DISINI" || SCRIPT_URL.trim() === "") {
+                Swal.fire('Mode Simulasi', 'URL Apps Script belum diisi di kode HTML. Mengaktifkan dummy data.', 'info');
+                isSimulation = true;
+            }
+
+            routeApp(page);
+        };
+
+        function routeApp(page) {
+            currentPage = page;
+            if (currentPage === 'join') {
+                document.getElementById('joinView').classList.remove('hidden');
+                document.getElementById('adminView').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('hidden'); 
+                loadJoinMeetingData();
+            } else {
+                document.getElementById('adminView').classList.remove('hidden');
+                document.getElementById('joinView').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.add('hidden'); 
+                checkLogin();
+            }
+        }
+
+        function copyGlobalLink() {
+            // Karena ini di-host di luar, kita ambil domain saat ini + parameter join
+            const joinLink = window.location.href.split('?')[0] + "?page=join";
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(joinLink).then(() => { Swal.fire({toast:true, position:'top-end', title: 'Link Tersalin!', icon: 'success', timer: 2000, showConfirmButton: false}); });
+            } else {
+                let ta = document.createElement("textarea"); ta.value = joinLink; ta.style.position = "fixed"; document.body.appendChild(ta); ta.focus(); ta.select();
+                try { document.execCommand('copy'); Swal.fire({toast:true, position:'top-end', title: 'Link Tersalin!', icon: 'success', timer: 2000, showConfirmButton: false}); } 
+                catch (err) { Swal.fire('Gagal', 'Salin manual: ' + joinLink, 'error'); }
+                document.body.removeChild(ta);
+            }
+        }
+
+        function checkLogin() {
+            Swal.fire({
+                title: 'Akses Admin',
+                html: '<input type="password" id="swal-input-pwd" class="swal2-input text-center" style="letter-spacing:5px;">',
+                showCancelButton: false, confirmButtonText: 'Masuk', confirmButtonColor: '#0b5cff',
+                allowOutsideClick: false, allowEscapeKey: false,
+                didOpen: () => {
+                    const input = document.getElementById('swal-input-pwd');
+                    input.focus();
+                    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') Swal.clickConfirm(); });
+                },
+                preConfirm: () => document.getElementById('swal-input-pwd').value
+            }).then((result) => {
+                if (result.value === 'admin123') { loadDataAdmin(false); } 
+                else { Swal.fire('Ditolak', 'Password salah.', 'error').then(checkLogin); }
+            });
+        }
+
+        function toggleLoadingOverlay(show, text = 'Memproses...') {
+            const overlay = document.getElementById('loadingOverlay');
+            document.getElementById('loadingText').innerText = text;
+            if(show) overlay.classList.remove('hidden');
+            else overlay.classList.add('hidden');
+        }
+
+        async function loadDataAdmin(silent = false) {
+            if(!silent) toggleLoadingOverlay(true, 'Memuat Data...');
+            
+            try {
+                const res = await fetchAPI('getAdminData');
+                dbMeetings = res.meetings; 
+                dbCategories = res.categories;
+                dbTemplateOpsi = res.templateOpsi || []; 
+                
+                const isModalOpen = document.getElementById('meetingModal').classList.contains('show') || document.getElementById('detailModal').classList.contains('show');
+                if(!isModalOpen) renderUI(); 
+                if(!silent) toggleLoadingOverlay(false); 
+                startAutoRefresh();
+            } catch (err) {
+                if(!silent) {
+                    toggleLoadingOverlay(false);
+                    Swal.fire('Error', 'Gagal memuat data dari server.', 'error');
+                }
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                if (currentPage === 'admin') {
+                    const isModalOpen = document.getElementById('meetingModal').classList.contains('show') || document.getElementById('detailModal').classList.contains('show');
+                    if (!isModalOpen) loadDataAdmin(true); 
+                }
+            }, 10000); 
+        }
+
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr) return "-";
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const parts = dateStr.split('-'); 
+            if(parts.length !== 3) return dateStr;
+            const d = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+            return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function toggleView(view) {
+            currentView = view;
+            document.getElementById('btnGallery').className = `btn border-0 ${view === 'gallery' ? 'btn-primary' : 'btn-outline-primary'}`;
+            document.getElementById('btnList').className = `btn border-0 ${view === 'list' ? 'btn-primary' : 'btn-outline-primary'}`;
+            renderUI();
+        }
+
+        function autoExtractZoom(urlStr) {
+            if (!urlStr) return;
+            try {
+                const url = new URL(urlStr);
+                const pathParts = url.pathname.split('/');
+                const jIndex = pathParts.indexOf('j');
+                if (jIndex !== -1 && pathParts.length > jIndex + 1) document.getElementById('inputZoomId').value = pathParts[jIndex + 1];
+                const pwd = url.searchParams.get('pwd');
+                if (pwd) document.getElementById('inputPwd').value = pwd;
+            } catch (e) {}
+        }
+
+        function getStatusClass(status) {
+            if(status === 'Mulai') return 'status-Mulai';
+            if(status === 'Aktif') return 'status-Aktif';
+            return 'status-Tidak_Aktif'; 
+        }
+
+        async function togglePin(id) {
+            await fetchAPI('togglePin', { id: id });
+            loadDataAdmin(true);
+        }
+
+        function renderUI() {
+            const container = document.getElementById('meetingList');
+            container.innerHTML = '';
+
+            if (dbMeetings.length === 0) {
+                container.innerHTML = `<div class="text-center p-5 bg-white rounded-4 shadow-sm text-muted"><i class="bi bi-inbox fs-1"></i><h5 class="mt-3">Belum ada meeting.</h5></div>`;
+                return;
+            }
+
+            let sortedMeetings = [...dbMeetings].sort((a,b) => {
+                let pA = a.sematkan === 'Ya' ? 1 : 0;
+                let pB = b.sematkan === 'Ya' ? 1 : 0;
+                return pB - pA;
+            });
+
+            const buildButtons = (m) => {
+                let btnMulai = ''; let btnAktif = ''; let btnDetail = ''; let btnEdit = ''; let btnHapus = '';
+                btnDetail = `<button class="btn btn-sm btn-info text-white flex-fill fw-bold" onclick="viewDetails('${m.id}')">Detail</button>`;
+                
+                if (m.status === 'Tidak Aktif' || m.status === 'Selesai') {
+                    btnMulai = `<button class="btn btn-sm btn-dark flex-fill fw-bold" disabled>Mulai</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-success flex-fill fw-bold" onclick="handleToggleStatus('${m.id}', 'Aktif')">Aktifkan</button>`;
+                    btnEdit = `<button class="btn btn-sm btn-secondary flex-fill fw-bold" disabled>Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-danger flex-fill fw-bold" onclick="handleDelete('${m.id}')">Hapus</button>`; 
+                } else if (m.status === 'Aktif') {
+                    btnMulai = `<button class="btn btn-sm btn-primary flex-fill fw-bold" onclick="handleToggleStatus('${m.id}', 'Mulai')">Mulai</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-secondary flex-fill fw-bold" onclick="handleToggleStatus('${m.id}', 'Tidak Aktif')">Nonaktif</button>`; 
+                    btnEdit = `<button class="btn btn-sm btn-warning flex-fill fw-bold" onclick="openModal('edit', '${m.id}')">Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-secondary flex-fill fw-bold" disabled>Hapus</button>`;
+                } else if (m.status === 'Mulai') {
+                    btnMulai = `<button class="btn btn-sm btn-dark flex-fill fw-bold" onclick="handleToggleStatus('${m.id}', 'Aktif')">Akhiri</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-secondary flex-fill fw-bold" onclick="handleToggleStatus('${m.id}', 'Tidak Aktif')">Nonaktif</button>`; 
+                    btnEdit = `<button class="btn btn-sm btn-warning flex-fill fw-bold" onclick="openModal('edit', '${m.id}')">Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-secondary flex-fill fw-bold" disabled>Hapus</button>`; 
+                }
+                return `${btnMulai} ${btnAktif} ${btnDetail} ${btnEdit} ${btnHapus}`;
+            };
+
+            if (currentView === 'gallery') {
+                container.className = 'row';
+                sortedMeetings.forEach(m => {
+                    let pct = m.target > 0 ? Math.round((m.hadir / m.target) * 100) : 0;
+                    let pinIcon = `<i class="bi bi-pin-angle-fill fs-5 ${m.sematkan === 'Ya' ? 'text-danger' : 'text-muted'}" style="cursor:pointer;" onclick="togglePin('${m.id}')" title="Sematkan"></i>`;
+                    
+                    container.innerHTML += `
+                        <div class="col-lg-6 mb-4">
+                            <div class="card card-custom h-100 ${m.sematkan === 'Ya' ? 'card-pinned' : ''}">
+                                <div class="card-body p-4 position-relative">
+                                    <div class="position-absolute" style="top: 15px; right: 15px;">${pinIcon}</div>
+                                    <div class="d-flex justify-content-between align-items-start mb-3 pe-4">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-1"><i class="bi bi-calendar2-event me-1"></i> ${formatTanggalIndo(m.tanggal)}</span>
+                                            <span class="text-primary small fw-bold"><i class="bi bi-people-fill"></i> Target Whitelist: ${m.target} | Hadir: ${m.hadir} <span class="text-muted">(${pct}%)</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center gap-2">
+                                        <span class="status-badge ${getStatusClass(m.status)}">${m.status}</span>
+                                        <h5 class="fw-bold text-dark m-0">${m.nama}</h5>
+                                    </div>
+                                    <div class="d-flex gap-2 bg-light p-2 rounded-3 text-center mb-3">
+                                        <div class="w-50 border-end"><small class="d-block text-muted">ID</small><strong class="font-monospace">${m.zoomId}</strong></div>
+                                        <div class="w-50"><small class="d-block text-muted">Pass</small><strong class="font-monospace">${m.pwd}</strong></div>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        ${buildButtons(m)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                container.className = 'table-responsive';
+                let tbody = '';
+                sortedMeetings.forEach(m => {
+                    let pct = m.target > 0 ? Math.round((m.hadir / m.target) * 100) : 0;
+                    let pinIcon = `<i class="bi bi-pin-angle-fill me-2 fs-6 ${m.sematkan === 'Ya' ? 'text-danger' : 'text-muted'}" style="cursor:pointer;" onclick="togglePin('${m.id}')" title="Sematkan"></i>`;
+                    
+                    tbody += `
+                        <tr class="${m.sematkan === 'Ya' ? 'table-primary' : ''}">
+                            <td class="ps-4 py-3 align-middle">
+                                <div class="d-flex flex-column justify-content-center h-100">
+                                    <div class="d-flex align-items-center mb-1">
+                                        ${pinIcon}
+                                        <div class="fw-bold text-dark">${m.nama}</div>
+                                    </div>
+                                    <div class="ms-4">
+                                        <small class="text-muted d-block">${formatTanggalIndo(m.tanggal)}</small>
+                                        <span class="text-primary small fw-bold mt-1 d-inline-block"><i class="bi bi-people-fill"></i> Hadir: ${m.hadir} (${pct}%)</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="font-monospace small align-middle">ID: ${m.zoomId}<br>PW: ${m.pwd}</td>
+                            <td class="align-middle"><span class="status-badge ${getStatusClass(m.status)}">${m.status}</span></td>
+                            <td class="text-end pe-4 align-middle">
+                                <div class="d-flex gap-1 justify-content-end align-items-center h-100">
+                                    ${buildButtons(m)}
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+                container.innerHTML = `<table class="table bg-white border rounded-4 shadow-sm overflow-hidden table-hover"><thead class="table-light"><tr><th class="ps-4">Info Meeting</th><th>Akses Zoom</th><th>Status</th><th class="text-end pe-4">Aksi 5 Tombol</th></tr></thead><tbody>${tbody}</tbody></table>`;
+            }
+        }
+
+        // --- MANAJEMEN FORM DINAMIS (ADMIN) ---
+        function addCustomVar() {
+            if (customVars.length >= 5) { Swal.fire('Batas', 'Maksimal 5 variabel.', 'warning'); return; }
+            const idx = customVars.length + 1;
+            customVars.push({ id: `variabel_${idx}`, label: '', type: 'text', options: '' });
+            renderCustomVars();
+        }
+
+        function removeCustomVar(index) {
+            customVars.splice(index, 1);
+            customVars.forEach((v, i) => { v.id = `variabel_${i+1}`; });
+            renderCustomVars();
+        }
+
+        function updateCustomVar(index, field, value) {
+            customVars[index][field] = value;
+            if (field === 'type') { renderCustomVars(); } 
+        }
+
+        function applyTemplate(index, selectEl) {
+            const val = selectEl.value;
+            if(val === '') return;
+            customVars[index].options = dbTemplateOpsi[val].opsi;
+            renderCustomVars(); // Refresh untuk nampilkan hasil
+        }
+
+        function renderCustomVars() {
+            const container = document.getElementById('customVarsContainer');
+            container.innerHTML = '';
+            
+            customVars.forEach((v, i) => {
+                let isChoice = v.type === 'radio' || v.type === 'dropdown';
+                let optionsHtml = '';
+                
+                if (isChoice) {
+                    let templateDropdown = dbTemplateOpsi.length > 0 ? `
+                        <select class="form-select form-select-sm mt-2 fw-semibold text-primary" style="background-color: #eef3ff;" onchange="applyTemplate(${i}, this)">
+                            <option value="">-- Template Opsi Jawaban --</option>
+                            ${dbTemplateOpsi.map((t, idx) => `<option value="${idx}">${t.nama}</option>`).join('')}
+                        </select>
+                    ` : '';
+
+                    optionsHtml = `
+                        ${templateDropdown}
+                        <textarea class="form-control form-control-sm mt-1 font-monospace" rows="2" placeholder="{Tampil} {Nilai Zoom}" onchange="updateCustomVar(${i}, 'options', this.value)">${v.options}</textarea>
+                    `;
+                }
+                    
+                container.innerHTML += `
+                    <div class="var-row">
+                        <button type="button" class="btn btn-danger btn-remove" onclick="removeCustomVar(${i})"><i class="bi bi-x"></i></button>
+                        <div class="row align-items-start g-2">
+                            <div class="col-12 col-md-3">
+                                <span class="badge bg-secondary mb-1 w-100">Var ${i+1} <small>(${v.id})</small></span>
+                                <select class="form-select form-select-sm fw-semibold" onchange="updateCustomVar(${i}, 'type', this.value)">
+                                    <option value="text" ${v.type==='text'?'selected':''}>Input Teks</option>
+                                    <option value="number" ${v.type==='number'?'selected':''}>Angka</option>
+                                    <option value="radio" ${v.type==='radio'?'selected':''}>Pilihan Ganda</option>
+                                    <option value="dropdown" ${v.type==='dropdown'?'selected':''}>Dropdown</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <input type="text" class="form-control form-control-sm fw-bold" placeholder="Pertanyaan Form" value="${v.label}" onchange="updateCustomVar(${i}, 'label', this.value)">
+                                ${optionsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('btnAddVar').style.display = customVars.length >= 5 ? 'none' : 'inline-block';
+        }
+
+        function renderCheckboxes(selectedCatsStr) {
+            const container = document.getElementById('kategoriContainer');
+            container.innerHTML = '';
+            let selectedArr = selectedCatsStr ? selectedCatsStr.split(',').map(c => c.trim()) : [];
+
+            if(dbCategories.length === 0) {
+                container.innerHTML = `<span class="text-muted small">Belum ada Kategori yang terdaftar di Sheet 'Daftar'</span>`;
+                return;
+            }
+
+            dbCategories.forEach((cat, idx) => {
+                let checked = selectedArr.includes(cat) ? 'checked' : '';
+                let id = 'cat_' + idx;
+                container.innerHTML += `
+                    <label class="cat-box ${checked ? 'checked' : ''}" for="${id}">
+                        <input type="checkbox" id="${id}" value="${cat}" class="cat-input" ${checked} onchange="this.parentElement.classList.toggle('checked')">
+                        ${cat}
+                    </label>
+                `;
+            });
+        }
+
+        function openModal(mode, id = null) {
+            document.getElementById('meetingForm').reset();
+            document.getElementById('inputId').value = '';
+            customVars = []; 
+            document.getElementById('modalTitle').innerText = mode === 'add' ? 'Buat Meeting Baru' : 'Edit Meeting';
+            
+            var tab1 = new bootstrap.Tab(document.getElementById('tab-meeting'));
+            tab1.show();
+
+            let catStr = "";
+            if (mode === 'edit') {
+                const data = dbMeetings.find(m => m.id === id);
+                if (data) {
+                    document.getElementById('inputId').value = data.id;
+                    document.getElementById('inputStatus').value = data.status;
+                    document.getElementById('inputNama').value = data.nama;
+                    document.getElementById('inputTanggal').value = data.tanggal;
+                    document.getElementById('inputLink').value = data.link;
+                    document.getElementById('inputZoomId').value = data.zoomId;
+                    document.getElementById('inputPwd').value = data.pwd;
+                    document.getElementById('inputNameFormat').value = data.nameFormat || '';
+                    catStr = data.kategori || '';
+                    if(data.formConfig) { try { customVars = JSON.parse(data.formConfig); } catch(e){} }
+                }
+            } else {
+                customVars = [{id: 'variabel_1', label: 'Nama Lengkap', type: 'text', options: ''}];
+                document.getElementById('inputNameFormat').value = '{variabel_1}';
+            }
+            renderCheckboxes(catStr);
+            renderCustomVars();
+            modalInstance.show();
+        }
+
+        async function saveMeetingManual() {
+            if(!document.getElementById('inputNama').value) return Swal.fire('Oops', 'Nama Meeting wajib diisi di Tab 1.', 'warning');
+            if(!document.getElementById('inputTanggal').value) return Swal.fire('Oops', 'Tanggal wajib diisi di Tab 1.', 'warning');
+            if(!document.getElementById('inputLink').value) return Swal.fire('Oops', 'Link Zoom wajib diisi di Tab 1.', 'warning');
+            if(!document.getElementById('inputNameFormat').value) return Swal.fire('Oops', 'Format Nama Zoom wajib diisi di Tab 2.', 'warning');
+            if(customVars.length === 0) return Swal.fire('Gagal', 'Minimal 1 variabel.', 'error');
+
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; btn.disabled = true;
+
+            let cats = [];
+            document.querySelectorAll('.cat-input:checked').forEach(c => cats.push(c.value));
+
+            const payload = {
+                id: document.getElementById('inputId').value, 
+                nama: document.getElementById('inputNama').value,
+                tanggal: document.getElementById('inputTanggal').value, 
+                link: document.getElementById('inputLink').value,
+                zoomId: document.getElementById('inputZoomId').value.replace(/\s/g, ''), 
+                pwd: document.getElementById('inputPwd').value,
+                status: document.getElementById('inputStatus').value || 'Aktif',
+                formConfig: JSON.stringify(customVars),
+                nameFormat: document.getElementById('inputNameFormat').value,
+                kategori: cats.join(', ')
+            };
+
+            const isEdit = payload.id !== '';
+            
+            try {
+                await fetchAPI(isEdit ? 'editMeeting' : 'addMeeting', payload);
+                modalInstance.hide(); 
+                btn.innerHTML = 'Simpan Meeting'; btn.disabled = false; 
+                loadDataAdmin(false);
+            } catch(e) {
+                btn.innerHTML = 'Simpan Meeting'; btn.disabled = false;
+                Swal.fire('Error', 'Gagal menyimpan.', 'error');
+            }
+        }
+
+        // --- AKSI ADMIN LAINNYA ---
+        function handleToggleStatus(id, targetStatus) {
+            let label = ""; let text = "";
+            if(targetStatus === 'Aktif') {
+                label = 'Aktifkan Meeting?';
+                text = 'Meeting akan tersedia untuk diedit/dimulai.';
+            } else if(targetStatus === 'Mulai') {
+                label = 'Mulai Meeting Ini?';
+                text = 'Link registrasi akan diarahkan ke sini (Hanya 1 link aktif yang bisa berjalan).';
+            } else if(targetStatus === 'Selesai') {
+                label = 'Selesaikan Meeting?';
+                text = 'Meeting akan ditandai selesai.';
+            } else {
+                label = 'Nonaktifkan / Ulangi?';
+                text = 'Meeting akan dinonaktifkan.';
+            }
+
+            Swal.fire({ title: label, text: text, icon: 'question', showCancelButton: true, confirmButtonText: `Ya, Proses`, confirmButtonColor: '#0b5cff'
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    toggleLoadingOverlay(true, 'Memproses...');
+                    await fetchAPI('toggleMeetingStatus', { id: id, status: targetStatus });
+                    loadDataAdmin(false);
+                }
+            });
+        }
+
+        function handleDelete(id) {
+            Swal.fire({ title: 'Hapus Meeting?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Hapus', confirmButtonColor: '#d33'
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    toggleLoadingOverlay(true, 'Menghapus...');
+                    await fetchAPI('deleteMeeting', { id: id });
+                    loadDataAdmin(false);
+                }
+            });
+        }
+
+        async function viewDetails(id) {
+            detailModalInstance.show();
+            document.getElementById('loadingAnalytics').classList.remove('hidden');
+            document.getElementById('contentAnalytics').classList.add('hidden');
+            
+            try {
+                const resURL = new URL(SCRIPT_URL);
+                resURL.searchParams.append('action', 'getMeetingAnalytics');
+                resURL.searchParams.append('id', id);
+                const result = await fetch(resURL).then(r => r.json());
+                renderDetails(result);
+            } catch(e) {
+                document.getElementById('loadingAnalytics').innerHTML = '<p class="text-danger">Gagal memuat detail</p>';
+            }
+        }
+
+        function renderDetails(data) {
+            document.getElementById('loadingAnalytics').classList.add('hidden');
+            document.getElementById('contentAnalytics').classList.remove('hidden');
+            
+            let pct = data.target > 0 ? Math.round((data.total / data.target) * 100) : 0;
+            document.getElementById('statTarget').innerText = data.target;
+            document.getElementById('statTotal').innerText = `${data.total} (${pct}%)`;
+            document.getElementById('statTerdaftar').innerText = data.terdaftar;
+            document.getElementById('statTamu').innerText = data.tamu;
+            
+            const tbody = document.getElementById('detailTableBody');
+            tbody.innerHTML = '';
+            
+            if(data.list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada aktivitas.</td></tr>`;
+            } else {
+                data.list.forEach(item => {
+                    const timeStr = String(item.waktu).split(' ')[1] || item.waktu;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="ps-3 py-2 small text-muted">${timeStr}</td>
+                            <td class="small font-monospace">${item.wa}</td>
+                            <td class="fw-semibold small">${item.nama}</td>
+                            <td class="align-middle"><span class="status-${item.status}">${item.status}</span></td>
+                            <td class="text-center fw-bold text-primary pe-3">${item.count}x</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // --- SISTEM JOIN PESERTA ---
+        async function loadJoinMeetingData() {
+            try {
+                const res = await fetchAPI('getActiveJoinMeeting');
+                if (res && res.id) { 
+                    currentJoinMeetingData = res; 
+                    renderJoinUI(); 
+                } else { 
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                    document.getElementById('step1').classList.add('hidden'); 
+                    Swal.fire({title: 'Informasi', text: 'Saat ini tidak ada jadwal meeting yang sedang dimulai. Silakan tunggu intruksi panitia.', icon: 'info', showConfirmButton: false, allowOutsideClick: false}); 
+                    document.getElementById('joinMeetingName').innerText = "Belum Ada Meeting Aktif";
+                    document.getElementById('joinMeetingDate').innerText = "-";
+                }
+            } catch(e) {
+                Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+            }
+        }
+
+        function renderJoinUI() {
+            toggleLoadingOverlay(false);
+            document.getElementById('joinMeetingName').innerText = currentJoinMeetingData.nama;
+            document.getElementById('joinMeetingDate').innerText = formatTanggalIndo(currentJoinMeetingData.tanggal);
+        }
+
+        function formatWAInput(inputElement) {
+            let val = inputElement.value.replace(/\D/g, ''); 
+            if (val.startsWith('08')) val = '628' + val.substring(2);
+            inputElement.value = val;
+        }
+
+        let tempWaInput = ""; 
+
+        async function handleCheckWA(e) {
+            e.preventDefault();
+            const waInput = document.getElementById('inputWaJoin').value;
+            if(waInput.length < 9) { Swal.fire('Perhatian', 'Nomor WA terlalu pendek.', 'warning'); return; }
+
+            const btn = document.getElementById('btnCheckWa');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...'; btn.disabled = true;
+            tempWaInput = waInput;
+
+            try {
+                const url = new URL(SCRIPT_URL);
+                url.searchParams.append('action', 'verifyParticipant');
+                url.searchParams.append('meetingId', currentJoinMeetingData.id);
+                url.searchParams.append('wa', waInput);
+                const res = await fetch(url).then(r => r.json());
+
+                btn.innerHTML = orig; btn.disabled = false;
+                
+                if (res.status === 'whitelist') {
+                    let nameFormat = currentJoinMeetingData.nameFormat || '{variabel_1}';
+                    let finalName = nameFormat;
+                    for (let i = 1; i <= 5; i++) {
+                        finalName = finalName.replace(new RegExp(`\\{variabel_${i}\\}`, 'g'), res.vars[`variabel_${i}`] || '');
+                    }
+                    finalName = finalName.replace(/\{variabel_\d+\}/g, '').trim(); 
+                    processJoinDirect(finalName, "Terdaftar", finalName, res.vars);
+                } else if (res.status === 'found_in_aktivitas') {
+                    showStep2DynamicForm(res.vars);
+                } else {
+                    showStep2DynamicForm();
+                }
+            } catch (err) {
+                btn.innerHTML = orig; btn.disabled = false;
+                Swal.fire('Error', 'Koneksi terputus', 'error');
+            }
+        }
+
+        function showStep2DynamicForm(pastVars = null) {
+            const container = document.getElementById('dynamicFormContainer');
+            container.innerHTML = '';
+            dynamicOptionMaps = {}; 
+            
+            let config = [];
+            try { config = JSON.parse(currentJoinMeetingData.formConfig); } catch(e){}
+            if(!config || config.length === 0) config = [{id: 'variabel_1', label: 'Nama Lengkap', type: 'text'}];
+
+            let html = '';
+            config.forEach((v, index) => {
+                dynamicOptionMaps[v.id] = {}; 
+                
+                html += `<div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-2">${v.label}</label>
+                            <div class="input-group-custom">`;
+
+                if(v.type === 'text') {
+                    html += `<i class="bi bi-person-badge icon-input"></i><input type="text" class="form-control uppercase-input" id="join_${v.id}" placeholder="Ketik jawaban..." required autocomplete="off">`;
+                    html += `</div></div>`;
+                } else if (v.type === 'number') {
+                    html += `<i class="bi bi-123 icon-input"></i><input type="number" class="form-control" id="join_${v.id}" placeholder="Ketik angka..." required autocomplete="off">`;
+                    html += `</div></div>`;
+                } else {
+                    let parsedOpts = [];
+                    if(v.options) {
+                        let lines = v.options.split('\n');
+                        lines.forEach(line => {
+                            let txt = line.trim();
+                            if(!txt) return; 
+                            let match = txt.match(/^\{(.+?)\}\s*\{(.+?)\}$/);
+                            if(match) {
+                                parsedOpts.push({ display: match[1].trim(), value: match[2].trim() });
+                                dynamicOptionMaps[v.id][match[1].trim().toUpperCase()] = match[2].trim();
+                            }
+                        });
+                    }
+
+                    if (v.type === 'radio') {
+                        html += `</div>`; 
+                        html += `<div class="mt-2 p-2 border rounded bg-white">`;
+                        parsedOpts.forEach((opt, idx) => {
+                            html += `<label class="form-check-custom">
+                                        <input type="radio" name="join_${v.id}" value="${opt.display}" required>
+                                        ${opt.display}
+                                     </label>`;
+                        });
+                        html += `</div><div></div></div>`; 
+                    } else if (v.type === 'dropdown') {
+                        let dl_id = `list_${v.id}`;
+                        html += `<div class="custom-dropdown-container w-100 position-relative">
+                                 <i class="bi bi-search icon-input"></i>
+                                 <input type="text" class="form-control uppercase-input dropdown-display" id="disp_${v.id}" placeholder="Ketik dan pilih opsi dari daftar..." required autocomplete="off" onfocus="showDropdown('${v.id}')" onkeyup="filterDropdown('${v.id}')" onblur="validateDropdown('${v.id}')">
+                                 <input type="hidden" id="join_${v.id}" class="dropdown-hidden-val" required>
+                                 <ul class="dropdown-menu w-100 shadow-sm custom-dropdown-list" id="${dl_id}">`;
+                        
+                        parsedOpts.forEach(opt => {
+                            html += `<li class="dropdown-item py-2 custom-opt" data-display="${opt.display}" onmousedown="selectOption('${v.id}', '${opt.display}')" style="cursor:pointer; border-bottom:1px solid #f1f1f1;">${opt.display}</li>`;
+                        });
+                        html += `</ul></div></div></div>`;
+                    }
+                }
+            });
+
+            container.innerHTML = html;
+            document.getElementById('titleStep2').innerText = pastVars ? "Konfirmasi Data Anda" : "Lengkapi Data Anda";
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            if (pastVars) {
+                setTimeout(() => {
+                    config.forEach(v => {
+                        let savedVal = pastVars[v.id];
+                        if (savedVal) {
+                            if (v.type === 'text' || v.type === 'number') {
+                                let el = document.getElementById(`join_${v.id}`);
+                                if (el) el.value = savedVal;
+                            } else if (v.type === 'radio') {
+                                let rads = document.getElementsByName(`join_${v.id}`);
+                                for (let r of rads) {
+                                    if (r.value.toUpperCase() === savedVal.toUpperCase() || r.value === savedVal) r.checked = true;
+                                }
+                            } else if (v.type === 'dropdown') {
+                                let dispEl = document.getElementById(`disp_${v.id}`);
+                                let hidEl = document.getElementById(`join_${v.id}`);
+                                if (dispEl) dispEl.value = savedVal;
+                                if (hidEl) hidEl.value = savedVal;
+                            }
+                        }
+                    });
+                }, 0);
+            }
+        }
+
+        // Custom Dropdown Logic
+        function showDropdown(id) { document.getElementById(`list_${id}`).classList.add('show'); }
+
+        function filterDropdown(id) {
+            let input = document.getElementById(`disp_${id}`);
+            let filter = input.value.toUpperCase();
+            let ul = document.getElementById(`list_${id}`);
+            ul.classList.add('show');
+            let li = ul.getElementsByTagName("li");
+            
+            for (let i = 0; i < li.length; i++) {
+                let txtValue = li[i].textContent || li[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) li[i].style.display = "";
+                else li[i].style.display = "none";
+            }
+            document.getElementById(`join_${id}`).value = ''; 
+        }
+
+        function selectOption(id, displayValue) {
+            document.getElementById(`disp_${id}`).value = displayValue;
+            document.getElementById(`join_${id}`).value = displayValue;
+            document.getElementById(`list_${id}`).classList.remove('show');
+        }
+
+        function validateDropdown(id) {
+            setTimeout(() => {
+                let disp = document.getElementById(`disp_${id}`);
+                let hidden = document.getElementById(`join_${id}`);
+                let ul = document.getElementById(`list_${id}`);
+                ul.classList.remove('show');
+                if (disp.value && !hidden.value) disp.value = ''; 
+            }, 150);
+        }
+
+        function backToStep1() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        function handleJoinDynamic(e) {
+            e.preventDefault();
+            
+            let config = [];
+            try { config = JSON.parse(currentJoinMeetingData.formConfig); } catch(e){}
+            if(config.length === 0) config = [{id: 'variabel_1'}];
+            
+            let nameFormat = currentJoinMeetingData.nameFormat || '{variabel_1}';
+            let finalName = nameFormat;
+            let dynamicVars = {}; 
+            
+            for(let v of config) {
+                let val = '';
+                if(v.type === 'radio') {
+                    let rads = document.getElementsByName(`join_${v.id}`);
+                    for(let r of rads) { if(r.checked) val = r.value; }
+                } else {
+                    val = document.getElementById(`join_${v.id}`).value;
+                }
+                
+                val = val.trim().toUpperCase();
+                dynamicVars[v.id] = val; 
+                
+                let zoomVal = dynamicOptionMaps[v.id] && dynamicOptionMaps[v.id][val] ? dynamicOptionMaps[v.id][val] : val;
+                finalName = finalName.replace(new RegExp(`\\{${v.id}\\}`, 'g'), zoomVal);
+            }
+            finalName = finalName.replace(/\{variabel_\d+\}/g, '').trim(); 
+            
+            let namaAsli = dynamicVars['variabel_1'] || finalName;
+            processJoinDirect(finalName, "Tamu", namaAsli, dynamicVars);
+        }
+
+        function processJoinDirect(namaZoom, statusValidasi, namaAsliInput, dynamicVarsObj) {
+            try {
+                let urlObj = new URL(currentJoinMeetingData.link);
+                urlObj.searchParams.set('uname', namaZoom);
+                const finalLink = urlObj.toString();
+
+                fetchAPI('recordActivity', {
+                    meetingId: currentJoinMeetingData.id, 
+                    namaMeeting: currentJoinMeetingData.nama,
+                    wa: tempWaInput, 
+                    nama: namaZoom, 
+                    status: statusValidasi, 
+                    linkZoom: finalLink,
+                    vars: dynamicVarsObj 
+                });
+
+                Swal.fire({ title: 'Berhasil!', text: 'Membuka Zoom di tab baru...', icon: 'success', timer: 1500, showConfirmButton: false 
+                }).then(() => {
+                    let newWin = window.open(finalLink, '_blank');
+                    if(!newWin) { window.location.href = finalLink; } 
+                    else {
+                         document.getElementById('inputWaJoin').value = '';
+                         if(!document.getElementById('step2').classList.contains('hidden')){ backToStep1(); }
+                    }
+                });
+            } catch (err) {
+                let newWin = window.open(currentJoinMeetingData.link, '_blank');
+                if(!newWin) window.location.href = currentJoinMeetingData.link;
+            }
+        }
+
+        // --- SIMULASI ---
+        function simulateAPI(action, data) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    if (action === 'getAdminData') {
+                        resolve({
+                            categories: ['DPP', 'Lajnah Dai', 'Umum'],
+                            templateOpsi: [
+                                {nama: 'Kab Kota', opsi: '{Makassar} {MKS}\n{Gowa} {GWA}'},
+                                {nama: 'Struktural', opsi: '{Ketua Umum} {K.U}\n{Anggota} {ANG}'}
+                            ],
+                            meetings: [{ 
+                                id: "MTG-123", nama: "Meeting Simulasi", tanggal: "2026-08-04", link: "https://zoom.us/j/123", zoomId: "123", pwd: "abc", status: "Mulai", target: 50, hadir: 20, kategori: "DPP, Lajnah Dai", sematkan: "Ya",
+                                formConfig: JSON.stringify([{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}, {id: 'variabel_2', label: 'Asal Daerah', type: 'dropdown', options: '{Makassar} {MKS}'}]),
+                                nameFormat: "{variabel_2} - {variabel_1}"
+                            }]
+                        });
+                    }
+                    if (action === 'getActiveJoinMeeting') {
+                        resolve({
+                            id: "MTG-123", nama: "Meeting Simulasi", tanggal: "2026-08-04", link: "https://zoom.us/j/123", zoomId: "123", pwd: "abc", status: "Mulai",
+                            formConfig: JSON.stringify([{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}, {id: 'variabel_2', label: 'Pilih Wilayah', type: 'radio', options: '{Aceh} {A.C}'}]),
+                            nameFormat: "{variabel_1} ({variabel_2})"
+                        });
+                    }
+                    if (action === 'verifyParticipant') resolve({ status: 'unregistered' });
+                    if (action === 'getMeetingAnalytics') resolve({ target: 50, total: 2, terdaftar: 1, tamu: 1, list: [{waktu: "10:00:00", wa: "6281234", nama: "Budi <br><small class='text-muted'>Zoom: MKS - Budi</small>", status: "Terdaftar", count: 2}] });
+                    resolve({ status: 'success' });
+                }, 500);
+            });
+        }
+    </script>
+</body>
+</html>
