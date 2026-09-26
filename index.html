@@ -948,7 +948,6 @@
             });
         }
 
-        // FIX: Menggunakan POST dari fetchAPI untuk Analytics 
         async function viewDetails(id) {
             detailModalInstance.show();
             document.getElementById('loadingAnalytics').classList.remove('hidden');
@@ -1117,7 +1116,6 @@
                         html += `</div><div></div></div>`; 
                     } else if (v.type === 'dropdown') {
                         let dl_id = `list_${v.id}`;
-                        // FIX: Hilangkan 'required' dari input hidden mencegah form tertahan silent error
                         html += `<div class="custom-dropdown-container w-100 position-relative">
                                  <i class="bi bi-search icon-input"></i>
                                  <input type="text" class="form-control uppercase-input dropdown-display" id="disp_${v.id}" placeholder="Cari opsi..." required autocomplete="off" onfocus="showDropdown('${v.id}')" onclick="showDropdown('${v.id}')" onkeyup="filterDropdown('${v.id}')" onblur="validateDropdown('${v.id}')">
@@ -1212,7 +1210,6 @@
             let finalName = nameFormat;
             let dynamicVars = {}; 
             
-            // FIX: Validasi Ketat Sesuai Request Anda
             for(let v of config) {
                 let val = '';
                 if(v.type === 'radio') {
