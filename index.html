@@ -120,10 +120,20 @@
 
         /* Tables */
         .table-custom { --bs-table-bg: transparent; --bs-table-color: var(--text-main); border-collapse: separate; border-spacing: 0; }
-        .table-custom th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-glass); }
+        .table-custom th { color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-glass); }
         .table-custom td { border-bottom: 1px solid var(--border-glass); vertical-align: middle; }
         .table-custom tbody tr { transition: background 0.2s; }
         .table-custom tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        /* FIX: Header Tabel Background Solid agar Tidak Tempias */
+        .table-custom thead th {
+            background-color: #0f172a; 
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            vertical-align: middle;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
 
         /* Join UI */
         .join-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 15px; position: relative;}
@@ -206,10 +216,7 @@
         }
         .form-control:focus, .form-select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important; }
         
-        option {
-            background-color: #0f172a; 
-            color: #f8fafc; 
-        }
+        option { background-color: #0f172a; color: #f8fafc; }
 
         .var-row { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 18px; padding-top: 28px; border-radius: 16px; margin-bottom: 12px; position: relative;}
         .var-row .btn-remove { position: absolute; top: 8px; right: 8px; border-radius: 50%; padding: 0; width: 28px; height: 28px; font-size: 16px; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.2); color: #f87171; border: none;}
@@ -434,15 +441,16 @@
                             </div>
                         </div>
                         <h6 class="fw-bold mb-3 text-muted text-uppercase" style="letter-spacing: 1px;">Log Aktivitas Peserta</h6>
-                        <div class="table-responsive rounded-4" style="border: 1px solid rgba(255,255,255,0.1); max-height: 400px;">
+                        <div class="table-responsive rounded-4" style="border: 1px solid rgba(255,255,255,0.1); max-height: 400px; overflow-y: auto;">
+                            <!-- FIX: Penambahan class align-middle ke Thead -->
                             <table class="table table-custom table-hover mb-0">
-                                <thead style="background: rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 1;">
+                                <thead>
                                     <tr>
-                                        <th class="ps-4 py-3">Waktu (WITA)</th>
-                                        <th>WhatsApp</th>
-                                        <th>Nama Lengkap & Format Zoom</th>
-                                        <th>Status Akses</th>
-                                        <th class="text-center pe-4">Klik</th>
+                                        <th class="ps-4 py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Waktu (WITA)</th>
+                                        <th class="py-3 align-middle text-uppercase" style="font-size: 0.75rem;">WhatsApp</th>
+                                        <th class="py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Nama Lengkap & Format Zoom</th>
+                                        <th class="py-3 align-middle text-center text-uppercase" style="font-size: 0.75rem;">Status Akses</th>
+                                        <th class="text-center pe-4 py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Klik</th>
                                     </tr>
                                 </thead>
                                 <tbody id="detailTableBody"></tbody>
@@ -604,11 +612,17 @@
 
         function formatTanggalIndo(dateStr) {
             if (!dateStr) return "-";
+            let d;
+            // Deteksi jika dari backend format yyyy-MM-dd
+            if (dateStr.includes('-')) {
+                const parts = dateStr.split(' ')[0].split('-');
+                if(parts.length === 3) d = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+            }
+            if (!d || isNaN(d.getTime())) d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            const parts = dateStr.split('-'); 
-            if(parts.length !== 3) return dateStr;
-            const d = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
             return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
         }
 
@@ -983,13 +997,14 @@
             } else {
                 data.list.forEach(item => {
                     const timeStr = String(item.waktu).split(' ')[1] || item.waktu;
+                    // FIX: Penambahan class align-middle ke masing-masing td agar sejajar dengan thead
                     tbody.innerHTML += `
                         <tr>
-                            <td class="ps-4 py-3 small text-muted font-monospace">${timeStr}</td>
-                            <td class="small text-info font-monospace">${item.wa}</td>
-                            <td class="fw-semibold text-light">${item.nama}</td>
-                            <td class="align-middle"><span class="status-${item.status}">${item.status}</span></td>
-                            <td class="text-center fw-bold text-accent pe-4">${item.count}x</td>
+                            <td class="ps-4 py-3 small text-muted font-monospace align-middle">${timeStr}</td>
+                            <td class="small text-info font-monospace align-middle">${item.wa}</td>
+                            <td class="fw-semibold text-light align-middle">${item.nama}</td>
+                            <td class="align-middle text-center"><span class="status-${item.status}">${item.status}</span></td>
+                            <td class="text-center fw-bold text-accent pe-4 align-middle">${item.count}x</td>
                         </tr>
                     `;
                 });
