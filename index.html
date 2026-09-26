@@ -13,7 +13,7 @@
     
     <script>
         // ==========================================
-        // KONFIGURASI API (TELAH DIUPDATE SESUAI LINK ANDA)
+        // KONFIGURASI API
         // ==========================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8TLfeiaLd6nkBrA06Wpr5dO8U8pT1kToYU6_U3i03AEJ8ezPGvlJ2ppsXFIhjc68-/exec"; 
     </script>
@@ -23,12 +23,12 @@
            PREMIUM MIDNIGHT THEME 2026
            ========================================= */
         :root {
-            --bg-body: #0b0f19; /* Deep Slate/Midnight */
-            --bg-card: rgba(30, 41, 59, 0.65); /* Glassmorphism Base */
+            --bg-body: #0b0f19;
+            --bg-card: rgba(30, 41, 59, 0.65);
             --bg-card-hover: rgba(30, 41, 59, 0.9);
-            --primary: #3b82f6; /* Electric Blue */
-            --accent: #8b5cf6; /* Neon Purple */
-            --cyan: #06b6d4; /* Neon Cyan */
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --cyan: #06b6d4;
             --border-glass: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -128,20 +128,18 @@
         /* Join UI */
         .join-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 15px; position: relative;}
         .join-card { 
-            max-width: 480px; width: 100%; /* Dikurangi dari 520px */
+            max-width: 480px; width: 100%;
             background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px);
             border: 1px solid var(--border-glass); border-radius: 24px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); 
             overflow: visible; padding: 2px;
         }
-        /* Gradient border wrapper effect */
         .join-card::before {
             content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
             background: linear-gradient(135deg, var(--cyan), var(--accent));
             border-radius: 26px; z-index: -1; opacity: 0.5; filter: blur(10px);
         }
         
-        /* Padding dan margin dikurangi agar lebih efektif */
         .join-header { text-align: center; padding: 25px 20px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .join-header .icon-box { 
             display: flex; align-items: center; justify-content: center; 
@@ -153,7 +151,7 @@
         .join-header .icon-box:hover { transform: rotate(0deg) scale(1.05); }
         .join-body { padding: 25px; }
         
-        /* Modern Inputs - Tinggi Input di Kurangi */
+        /* Modern Inputs */
         .input-group-custom { position: relative; }
         .input-group-custom .icon-input { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 1.1rem; z-index: 10;}
         .input-group-custom input { 
@@ -176,7 +174,7 @@
         .form-check-custom input { width: 1.2rem; height: 1.2rem; margin-right: 12px; margin-top:0; cursor: pointer; accent-color: var(--cyan);}
         .form-check-custom label { margin:0; cursor: pointer; width:100%; font-weight: 500; color: #e2e8f0; font-size: 0.95rem;}
 
-        /* Dropdown Autocomplete - Posisi & Z-index diperbaiki */
+        /* Dropdown Autocomplete */
         .custom-dropdown-container { position: relative; width: 100%; }
         .custom-dropdown-list { 
             display: none; margin-top: 5px; max-height: 250px; overflow-y: auto; 
@@ -208,10 +206,9 @@
         }
         .form-control:focus, .form-select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important; }
         
-        /* FIX UNTUK WARNA BACKGROUND OPTION AGAR TERBACA */
         option {
-            background-color: #0f172a; /* Warna dark mode */
-            color: #f8fafc; /* Warna teks putih */
+            background-color: #0f172a; 
+            color: #f8fafc; 
         }
 
         .var-row { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 18px; padding-top: 28px; border-radius: 16px; margin-bottom: 12px; position: relative;}
@@ -271,7 +268,6 @@
     <div id="joinView" class="hidden join-wrapper">
         <div class="join-card">
             <div class="join-header">
-                <!-- Tombol kembali ke admin -->
                 <a href="?page=admin" class="icon-box" title="Admin Akses">
                     <i class="bi bi-camera-video-fill"></i>
                 </a>
@@ -306,7 +302,6 @@
                         <h5 class="fw-bold text-white m-0" id="titleStep2">Lengkapi Data</h5>
                     </div>
                     <form onsubmit="handleJoinDynamic(event)">
-                        <!-- MENGHILANGKAN OVERFLOW-Y AGAR DROPDOWN TIDAK TERPOTONG -->
                         <div id="dynamicFormContainer" style="margin-bottom: 15px;"></div>
                         <div class="mt-2">
                             <button type="submit" class="btn w-100 btn-gradient rounded-pill" id="btnJoinUnreg" style="height: 48px; font-size: 1rem;">
@@ -340,7 +335,6 @@
 
                     <form id="meetingForm" onsubmit="handleFormSubmit(event)">
                         <div class="tab-content" id="meetingTabsContent">
-                            <!-- TAB 1 -->
                             <div class="tab-pane fade show active" id="pane-meeting" role="tabpanel">
                                 <input type="hidden" id="inputId">
                                 <input type="hidden" id="inputStatus">
@@ -370,7 +364,6 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 2 -->
                             <div class="tab-pane fade" id="pane-participant" role="tabpanel">
                                 <div class="mb-4 p-3 rounded-4" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);">
                                     <label class="form-label fw-bold text-light mb-2"><i class="bi bi-shield-check text-success me-2"></i>Kategori Whitelist</label>
@@ -751,7 +744,6 @@
             }
         }
 
-        // --- MANAJEMEN FORM DINAMIS (ADMIN) ---
         function addCustomVar() {
             if (customVars.length >= 5) { SwalDark.fire('Batas Maksimal', 'Maksimal 5 variabel diperbolehkan.', 'warning'); return; }
             const idx = customVars.length + 1;
@@ -956,19 +948,21 @@
             });
         }
 
+        // FIX: Menggunakan POST dari fetchAPI untuk Analytics 
         async function viewDetails(id) {
             detailModalInstance.show();
             document.getElementById('loadingAnalytics').classList.remove('hidden');
             document.getElementById('contentAnalytics').classList.add('hidden');
             
             try {
-                const resURL = new URL(SCRIPT_URL);
-                resURL.searchParams.append('action', 'getMeetingAnalytics');
-                resURL.searchParams.append('id', id);
-                const result = await fetch(resURL).then(r => r.json());
+                const result = await fetchAPI('getMeetingAnalytics', { id: id });
+                if (result.error) {
+                    document.getElementById('loadingAnalytics').innerHTML = `<div class="text-danger p-4 text-center"><h5>Error Server</h5><p>${result.error}</p></div>`;
+                    return;
+                }
                 renderDetails(result);
             } catch(e) {
-                document.getElementById('loadingAnalytics').innerHTML = '<p class="text-danger">Koneksi Terputus, Gagal Memuat Data</p>';
+                document.getElementById('loadingAnalytics').innerHTML = '<p class="text-danger text-center mt-4">Koneksi Terputus, Gagal Memuat Data</p>';
             }
         }
 
@@ -1003,7 +997,6 @@
             }
         }
 
-        // --- SISTEM JOIN PESERTA ---
         async function loadJoinMeetingData() {
             try {
                 const res = await fetchAPI('getActiveJoinMeeting');
@@ -1087,7 +1080,6 @@
             config.forEach((v, index) => {
                 dynamicOptionMaps[v.id] = {}; 
                 
-                // Jarak antar input diperkecil (mb-3)
                 html += `<div class="mb-3">
                             <label class="form-label text-muted fw-bold small text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing:0.5px;">${v.label}</label>
                             <div class="input-group-custom">`;
@@ -1125,14 +1117,14 @@
                         html += `</div><div></div></div>`; 
                     } else if (v.type === 'dropdown') {
                         let dl_id = `list_${v.id}`;
+                        // FIX: Hilangkan 'required' dari input hidden mencegah form tertahan silent error
                         html += `<div class="custom-dropdown-container w-100 position-relative">
                                  <i class="bi bi-search icon-input"></i>
                                  <input type="text" class="form-control uppercase-input dropdown-display" id="disp_${v.id}" placeholder="Cari opsi..." required autocomplete="off" onfocus="showDropdown('${v.id}')" onclick="showDropdown('${v.id}')" onkeyup="filterDropdown('${v.id}')" onblur="validateDropdown('${v.id}')">
-                                 <input type="hidden" id="join_${v.id}" class="dropdown-hidden-val" required>
+                                 <input type="hidden" id="join_${v.id}" class="dropdown-hidden-val">
                                  <ul class="dropdown-menu shadow-lg custom-dropdown-list" id="${dl_id}">`;
                         
                         parsedOpts.forEach(opt => {
-                            // Menambahkan onmousedown dan onclick agar touch device responsif
                             html += `<li class="dropdown-item py-2 custom-opt" data-display="${opt.display}" onmousedown="selectOption('${v.id}', '${opt.display}')" onclick="selectOption('${v.id}', '${opt.display}')">${opt.display}</li>`;
                         });
                         html += `</ul></div></div></div>`;
@@ -1170,7 +1162,6 @@
             }
         }
 
-        // Dropdown Helper
         function showDropdown(id) { document.getElementById(`list_${id}`).classList.add('show'); }
 
         function filterDropdown(id) {
@@ -1196,7 +1187,6 @@
         }
 
         function validateDropdown(id) {
-            // Memberi waktu agar klik pada opsi bisa dieksekusi dulu (200ms lebih stabil)
             setTimeout(() => {
                 let disp = document.getElementById(`disp_${id}`);
                 let hidden = document.getElementById(`join_${id}`);
@@ -1222,13 +1212,30 @@
             let finalName = nameFormat;
             let dynamicVars = {}; 
             
+            // FIX: Validasi Ketat Sesuai Request Anda
             for(let v of config) {
                 let val = '';
                 if(v.type === 'radio') {
                     let rads = document.getElementsByName(`join_${v.id}`);
-                    for(let r of rads) { if(r.checked) val = r.value; }
+                    let isChecked = false;
+                    for(let r of rads) { 
+                        if(r.checked) { val = r.value; isChecked = true; } 
+                    }
+                    if(!isChecked) {
+                        return SwalDark.fire('Perhatian', `Silakan pilih salah satu jawaban pada bagian: ${v.label}`, 'warning');
+                    }
+                } else if (v.type === 'dropdown') {
+                    let disp = document.getElementById(`disp_${v.id}`).value;
+                    val = document.getElementById(`join_${v.id}`).value;
+                    if (!val || !val.trim() || !disp.trim()) {
+                        document.getElementById(`disp_${v.id}`).value = '';
+                        return SwalDark.fire('Perhatian', `Pada bagian "${v.label}", Anda wajib memilih opsi yang tersedia dari daftar, tidak boleh diisi jawaban lain.`, 'warning');
+                    }
                 } else {
                     val = document.getElementById(`join_${v.id}`).value;
+                    if (!val || !val.trim()) {
+                        return SwalDark.fire('Perhatian', `Input "${v.label}" tidak boleh kosong atau hanya berisi spasi.`, 'warning');
+                    }
                 }
                 
                 val = val.trim().toUpperCase();
@@ -1237,6 +1244,7 @@
                 let zoomVal = dynamicOptionMaps[v.id] && dynamicOptionMaps[v.id][val] ? dynamicOptionMaps[v.id][val] : val;
                 finalName = finalName.replace(new RegExp(`\\{${v.id}\\}`, 'g'), zoomVal);
             }
+            
             finalName = finalName.replace(/\{variabel_\d+\}/g, '').trim(); 
             
             let namaAsli = dynamicVars['variabel_1'] || finalName;
@@ -1279,7 +1287,7 @@
             return new Promise((resolve) => {
                 setTimeout(() => {
                     if (action === 'getAdminData') {
-                        resolve({
+                        return resolve({
                             categories: ['DPP', 'Lajnah Dai', 'Umum'],
                             templateOpsi: [
                                 {nama: 'Kab Kota', opsi: '{Makassar} {MKS}\n{Gowa} {GWA}'},
@@ -1293,14 +1301,15 @@
                         });
                     }
                     if (action === 'getActiveJoinMeeting') {
-                        resolve({
+                        return resolve({
                             id: "MTG-123", nama: "Webinar UI/UX 2026", tanggal: "2026-08-04", link: "https://zoom.us/j/123", zoomId: "812 3456 7890", pwd: "neon", status: "Mulai",
                             formConfig: JSON.stringify([{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}, {id: 'variabel_2', label: 'Pilih Wilayah', type: 'dropdown', options: '{Aceh} {A.C}\n{Sumatera Utara} {S.U}\n{Jawa Barat} {J.B}\n{DKI Jakarta} {DKI}\n{Sulawesi Selatan} {SULSEL}\n{Kalimantan Timur} {KALTIM}\n{Papua} {PPA}'}]),
                             nameFormat: "{variabel_1} ({variabel_2})"
                         });
                     }
-                    if (action === 'verifyParticipant') resolve({ status: 'unregistered' });
-                    if (action === 'getMeetingAnalytics') resolve({ target: 120, total: 3, terdaftar: 2, tamu: 1, list: [{waktu: "10:00:00", wa: "6281234", nama: "Budi <br><small class='text-muted'>Zoom: MKS - Budi</small>", status: "Terdaftar", count: 2}] });
+                    if (action === 'verifyParticipant') return resolve({ status: 'unregistered' });
+                    if (action === 'getMeetingAnalytics') return resolve({ target: 120, total: 3, terdaftar: 2, tamu: 1, list: [{waktu: "10:00:00", wa: "6281234", nama: "Budi <br><small class='text-muted'>Zoom: MKS - Budi</small>", status: "Terdaftar", count: 2}] });
+                    
                     resolve({ status: 'success' });
                 }, 500);
             });
