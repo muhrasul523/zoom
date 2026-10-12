@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Premium Workspace 2026</title>
+    <!-- Bootstrap 5 Dark Mode Ready -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Modern Font: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        // ==========================================
+        // KONFIGURASI API
+        // ==========================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtnp5PuhM3vMkskypCATU8mtweKU6d9RXfyoFLbMcgmW5gzMnER8OHAkWksBzpbd6jmQ/exec"; 
+    </script>
+
+    <style>
+        /* =========================================
+           PREMIUM MIDNIGHT THEME 2026
+           ========================================= */
+        :root {
+            --bg-body: #0b0f19;
+            --bg-card: rgba(30, 41, 59, 0.65);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --cyan: #06b6d4;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-body); 
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+            background-attachment: fixed;
+            color: var(--text-main); 
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* Floating Navbar */
+        .navbar-custom { 
+            background: rgba(11, 15, 25, 0.8); 
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 15px 0;
+        }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; }
+        .text-gradient {
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Glassmorphic Cards */
+        .card-custom { 
+            border: 1px solid var(--border-glass); 
+            border-radius: 20px; 
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow: hidden;
+        }
+        .card-custom:hover { 
+            transform: translateY(-5px); 
+            background: var(--bg-card-hover);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(59, 130, 246, 0.1); 
+        }
+        .card-pinned { border: 1px solid var(--accent); box-shadow: 0 0 15px rgba(139, 92, 246, 0.15); }
+        
+        /* Neon Status Badges */
+        .status-badge { 
+            padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; 
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .status-Mulai { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.5); box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+        .status-Aktif { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-Tidak_Aktif { background: rgba(148, 163, 184, 0.1); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.2); }
+        .status-Selesai { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .status-Terdaftar { background: rgba(34, 197, 94, 0.15); color: #4ade80; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(34, 197, 94, 0.3);}
+        .status-Tamu { background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);}
+
+        /* Gradient Buttons */
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none; color: white; font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+        .btn:disabled, .btn[disabled] { opacity: 0.4; filter: grayscale(100%); cursor: not-allowed; pointer-events: none; }
+
+        /* Loading Overlay Custom */
+        #loadingOverlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(11, 15, 25, 0.9); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        }
+        .spinner-custom {
+            width: 3.5rem; height: 3.5rem; border-width: 4px;
+            border-color: rgba(255,255,255,0.1); border-top-color: var(--cyan);
+            border-right-color: var(--accent); animation: spinner-border .8s linear infinite;
+        }
+
+        /* Tables */
+        .table-custom { --bs-table-bg: transparent; --bs-table-color: var(--text-main); border-collapse: separate; border-spacing: 0; }
+        .table-custom th { color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-glass); }
+        .table-custom td { border-bottom: 1px solid var(--border-glass); vertical-align: middle; }
+        .table-custom tbody tr { transition: background 0.2s; }
+        .table-custom tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        /* FIX: Header Tabel Background Solid agar Tidak Tempias */
+        .table-custom thead th {
+            background-color: #0f172a; 
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            vertical-align: middle;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        /* Join UI */
+        .join-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 15px; position: relative;}
+        .join-card { 
+            max-width: 480px; width: 100%;
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass); border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); 
+            overflow: visible; padding: 2px;
+        }
+        .join-card::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(135deg, var(--cyan), var(--accent));
+            border-radius: 26px; z-index: -1; opacity: 0.5; filter: blur(10px);
+        }
+        
+        .join-header { text-align: center; padding: 25px 20px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .join-header .icon-box { 
+            display: flex; align-items: center; justify-content: center; 
+            width: 60px; height: 60px; margin: 0 auto 15px; font-size: 28px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            color: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.1); 
+            transition: all 0.3s; text-decoration: none; transform: rotate(-5deg);
+        }
+        .join-header .icon-box:hover { transform: rotate(0deg) scale(1.05); }
+        .join-body { padding: 25px; }
+        
+        /* Modern Inputs */
+        .input-group-custom { position: relative; }
+        .input-group-custom .icon-input { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-size: 1.1rem; z-index: 10;}
+        .input-group-custom input { 
+            padding-left: 50px; height: 48px; border-radius: 14px; font-size: 1rem; 
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); 
+            color: #fff; transition: all 0.3s; width: 100%; font-weight: 500;
+        }
+        .input-group-custom input:focus { 
+            background: rgba(0,0,0,0.4); border-color: var(--cyan); 
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15); outline: none; 
+        }
+        .input-group-custom input::placeholder { color: rgba(255,255,255,0.3); font-weight: 400;}
+        
+        .form-check-custom { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center;
+        }
+        .form-check-custom:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+        .form-check-custom input { width: 1.2rem; height: 1.2rem; margin-right: 12px; margin-top:0; cursor: pointer; accent-color: var(--cyan);}
+        .form-check-custom label { margin:0; cursor: pointer; width:100%; font-weight: 500; color: #e2e8f0; font-size: 0.95rem;}
+
+        /* Dropdown Autocomplete */
+        .custom-dropdown-container { position: relative; width: 100%; }
+        .custom-dropdown-list { 
+            display: none; margin-top: 5px; max-height: 250px; overflow-y: auto; 
+            position: absolute; z-index: 9999; border-radius: 12px; 
+            background: #1e293b; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+            border: 1px solid var(--border-glass); 
+            width: 100%; top: 100%; left: 0;
+        }
+        .custom-dropdown-list.show { display: block; }
+        .custom-opt { 
+            padding: 10px 14px; cursor: pointer; font-weight: 500; font-size: 0.9rem; 
+            border-radius: 8px; transition: background 0.2s; list-style: none; color: #cbd5e1;
+        }
+        .custom-opt:hover { background: rgba(59, 130, 246, 0.2); color: #fff; }
+
+        /* Modals Dark Styling */
+        .modal-content { 
+            background: #0f172a; border: 1px solid var(--border-glass); 
+            border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+        }
+        .modal-header { border-bottom-color: rgba(255,255,255,0.05); }
+        .modal-footer { border-top-color: rgba(255,255,255,0.05); }
+        .nav-pills .nav-link { color: var(--text-muted); border-radius: 12px; font-weight: 600;}
+        .nav-pills .nav-link.active { background: rgba(255,255,255,0.1); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);}
+        
+        .form-control, .form-select { 
+            background-color: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; 
+            color: #fff !important; border-radius: 12px;
+        }
+        .form-control:focus, .form-select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important; }
+        
+        option { background-color: #0f172a; color: #f8fafc; }
+
+        .var-row { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 18px; padding-top: 28px; border-radius: 16px; margin-bottom: 12px; position: relative;}
+        .var-row .btn-remove { position: absolute; top: 8px; right: 8px; border-radius: 50%; padding: 0; width: 28px; height: 28px; font-size: 16px; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.2); color: #f87171; border: none;}
+        .var-row .btn-remove:hover { background: #ef4444; color: white;}
+
+        .cat-box { display: inline-block; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 6px 16px; margin: 4px; font-size: 0.85rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); transition: all 0.2s;}
+        .cat-box input { display: none; }
+        .cat-box.checked { background: rgba(59, 130, 246, 0.2); border-color: var(--primary); color: #fff; font-weight: 600;}
+
+        .uppercase-input { text-transform: uppercase; }
+        .fade-step { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner-border spinner-custom mb-4" role="status"></div>
+        <h5 class="fw-bold text-light" id="loadingText" style="letter-spacing: 1px;">Inisialisasi Sistem...</h5>
+    </div>
+
+    <!-- ADMIN VIEW -->
+    <div id="adminView" class="hidden">
+        <nav class="navbar navbar-dark navbar-custom sticky-top mb-5">
+            <div class="container">
+                <span class="navbar-brand fs-4"><i class="bi bi-hexagon-fill text-primary me-2"></i> <span class="text-gradient">Zoom Workspace</span></span>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-dark border border-secondary px-3 py-2 rounded-pill shadow-sm"><i class="bi bi-shield-lock-fill text-success me-1"></i> Admin Panel</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container pb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h3 class="fw-bold m-0" style="letter-spacing: -0.5px;">Daftar Meeting</h3>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-dark fw-bold rounded-pill px-4 border border-secondary" onclick="copyGlobalLink()">
+                        <i class="bi bi-link-45deg fs-5 align-middle"></i> Link Registrasi
+                    </button>
+                    <div class="btn-group bg-dark border border-secondary rounded-pill p-1">
+                        <button class="btn btn-sm rounded-pill px-3 py-1 ${currentView === 'gallery' ? 'btn-primary' : 'btn-dark border-0'}" id="btnGallery" onclick="toggleView('gallery')"><i class="bi bi-grid-fill"></i></button>
+                        <button class="btn btn-sm rounded-pill px-3 py-1 ${currentView === 'list' ? 'btn-primary' : 'btn-dark border-0'}" id="btnList" onclick="toggleView('list')"><i class="bi bi-list-ul"></i></button>
+                    </div>
+                    <button class="btn btn-gradient rounded-pill px-4" onclick="openModal('add')">
+                        <i class="bi bi-plus-lg me-2"></i> Buat Meeting
+                    </button>
+                </div>
+            </div>
+            
+            <div id="meetingList"></div> 
+        </div>
+    </div>
+
+    <!-- JOIN VIEW -->
+    <div id="joinView" class="hidden join-wrapper">
+        <div class="join-card">
+            <div class="join-header">
+                <a href="?page=admin" class="icon-box" title="Admin Akses">
+                    <i class="bi bi-camera-video-fill"></i>
+                </a>
+                <h3 class="fw-bold mb-2 text-white" id="joinMeetingName" style="letter-spacing: -0.5px;">Memuat Data...</h3>
+                <div class="d-inline-flex align-items-center mt-1 px-4 py-2" style="background: rgba(255,255,255,0.05); border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="bi bi-calendar2-event text-info me-2"></i> 
+                    <span id="joinMeetingDate" class="text-light small fw-semibold" style="letter-spacing: 0.5px;">Mohon tunggu</span>
+                </div>
+            </div>
+
+            <div class="join-body">
+                <div id="step1" class="fade-step">
+                    <form onsubmit="handleCheckWA(event)">
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-semibold small text-uppercase" style="letter-spacing: 1px;">Verifikasi Identitas</label>
+                            <div class="input-group-custom mt-1">
+                                <i class="bi bi-whatsapp icon-input text-success"></i>
+                                <input type="tel" class="form-control" id="inputWaJoin" 
+                                    placeholder="Masukkan No. WhatsApp (Cth: 628...)" required 
+                                    oninput="formatWAInput(this)" autocomplete="off">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn w-100 btn-gradient rounded-pill" id="btnCheckWa" style="height: 48px; font-size: 1rem;">
+                            Lanjutkan <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="step2" class="hidden fade-step">
+                    <div class="d-flex align-items-center mb-3 pb-2" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <button type="button" class="btn btn-sm btn-dark rounded-circle me-3" style="width:32px; height:32px;" onclick="backToStep1()" title="Kembali"><i class="bi bi-arrow-left"></i></button>
+                        <h5 class="fw-bold text-white m-0" id="titleStep2">Lengkapi Data</h5>
+                    </div>
+                    <form onsubmit="handleJoinDynamic(event)">
+                        <div id="dynamicFormContainer" style="margin-bottom: 15px;"></div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn w-100 btn-gradient rounded-pill" id="btnJoinUnreg" style="height: 48px; font-size: 1rem;">
+                                Gabung Zoom Sekarang <i class="bi bi-camera-video ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM MEETING -->
+    <div class="modal fade" id="meetingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                    <h4 class="modal-title fw-bold" id="modalTitle" style="letter-spacing: -0.5px;">Form Meeting</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body p-4 pt-3">
+                    <ul class="nav nav-pills nav-justified mb-4 p-1 rounded-pill" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);" id="meetingTabs" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-meeting" data-bs-toggle="pill" data-bs-target="#pane-meeting" type="button" role="tab">Informasi Dasar</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-participant" data-bs-toggle="pill" data-bs-target="#pane-participant" type="button" role="tab">Partisipan & Form</button>
+                      </li>
+                    </ul>
+
+                    <form id="meetingForm" onsubmit="handleFormSubmit(event)">
+                        <div class="tab-content" id="meetingTabsContent">
+                            <div class="tab-pane fade show active" id="pane-meeting" role="tabpanel">
+                                <input type="hidden" id="inputId">
+                                <input type="hidden" id="inputStatus">
+                                <div class="row g-3">
+                                    <div class="col-md-7">
+                                        <label class="form-label text-muted small fw-bold text-uppercase">Nama Meeting</label>
+                                        <input type="text" class="form-control form-control-lg fs-6" id="inputNama" placeholder="Cth: Kajian Akbar">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label text-muted small fw-bold text-uppercase">Tanggal</label>
+                                        <input type="date" class="form-control form-control-lg fs-6" id="inputTanggal">
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 rounded-4" style="background: rgba(59, 130, 246, 0.05); border: 1px dashed rgba(59, 130, 246, 0.3);">
+                                    <label class="form-label fw-bold text-info mb-2"><i class="bi bi-link-45deg fs-5 align-middle"></i> Paste Link Zoom Lengkap</label>
+                                    <input type="url" class="form-control mb-3" id="inputLink" placeholder="https://us05web.zoom.us/j/..." oninput="autoExtractZoom(this.value)">
+                                    <div class="row g-2">
+                                        <div class="col-sm-6">
+                                            <label class="form-label text-muted small mb-1">Meeting ID</label>
+                                            <input type="text" class="form-control font-monospace" id="inputZoomId">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label text-muted small mb-1">Password</label>
+                                            <input type="text" class="form-control font-monospace" id="inputPwd">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pane-participant" role="tabpanel">
+                                <div class="mb-4 p-3 rounded-4" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);">
+                                    <label class="form-label fw-bold text-light mb-2"><i class="bi bi-shield-check text-success me-2"></i>Kategori Whitelist</label>
+                                    <div id="kategoriContainer" class="d-flex flex-wrap"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-bold text-light m-0"><i class="bi bi-ui-radios-grid text-primary me-2"></i>Variabel Form Custom</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="addCustomVar()" id="btnAddVar"><i class="bi bi-plus"></i> Tambah</button>
+                                </div>
+                                <div id="customVarsContainer" style="max-height: 40vh; overflow-y: auto; padding-right:5px;"></div>
+                                
+                                <div class="mt-4 p-3 rounded-4" style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2);">
+                                    <label class="form-label fw-bold text-light mb-1"><i class="bi bi-person-vcard text-info me-2"></i>Format Nama Zoom (Otomatis)</label>
+                                    <p class="text-muted small mb-2">Gunakan kurung kurawal, cth: <code>{variabel_1}</code></p>
+                                    <input type="text" class="form-control fw-bold font-monospace" id="inputNameFormat" placeholder="{variabel_3} - {variabel_1}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-4 px-0 pb-0">
+                            <button type="button" class="btn btn-dark rounded-pill px-4 border border-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-gradient rounded-pill px-5" id="btnSave" onclick="saveMeetingManual()">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL ANALYTICS -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                    <h4 class="modal-title fw-bold" style="letter-spacing: -0.5px;"><i class="bi bi-graph-up-arrow text-primary me-2"></i> Live Analytics</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="loadingAnalytics" class="text-center py-5">
+                        <div class="spinner-border spinner-custom" role="status"></div>
+                        <p class="mt-3 text-muted">Sinkronisasi data aktivitas...</p>
+                    </div>
+                    <div id="contentAnalytics" class="hidden">
+                        <div class="row mb-4 g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);">
+                                    <small class="text-muted text-uppercase fw-bold">Target Whitelist</small>
+                                    <h2 id="statTarget" class="fw-bold m-0 text-light mt-1">0</h2>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 rounded-4" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                                    <small class="text-info text-uppercase fw-bold">Total Hadir</small>
+                                    <h2 id="statTotal" class="fw-bold m-0 text-white mt-1">0</h2>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 rounded-4" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2);">
+                                    <small class="text-success text-uppercase fw-bold">Terdaftar</small>
+                                    <h2 id="statTerdaftar" class="fw-bold m-0 text-white mt-1">0</h2>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-3 rounded-4" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
+                                    <small class="text-warning text-uppercase fw-bold">Tamu / Umum</small>
+                                    <h2 id="statTamu" class="fw-bold m-0 text-white mt-1">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="fw-bold mb-3 text-muted text-uppercase" style="letter-spacing: 1px;">Log Aktivitas Peserta</h6>
+                        <div class="table-responsive rounded-4" style="border: 1px solid rgba(255,255,255,0.1); max-height: 400px; overflow-y: auto;">
+                            <!-- FIX: Penambahan class align-middle ke Thead -->
+                            <table class="table table-custom table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4 py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Waktu (WITA)</th>
+                                        <th class="py-3 align-middle text-uppercase" style="font-size: 0.75rem;">WhatsApp</th>
+                                        <th class="py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Nama Lengkap & Format Zoom</th>
+                                        <th class="py-3 align-middle text-center text-uppercase" style="font-size: 0.75rem;">Status Akses</th>
+                                        <th class="text-center pe-4 py-3 align-middle text-uppercase" style="font-size: 0.75rem;">Klik</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detailTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // --- KONFIGURASI SWEETALERT DARK MODE ---
+        const SwalDark = Swal.mixin({
+            background: '#0f172a',
+            color: '#f8fafc',
+            customClass: {
+                popup: 'border border-secondary rounded-4 shadow-lg',
+                confirmButton: 'btn btn-gradient rounded-pill px-4 mx-2',
+                cancelButton: 'btn btn-dark rounded-pill px-4 mx-2 border border-secondary',
+                input: 'form-control bg-dark text-white border-secondary'
+            },
+            buttonsStyling: false
+        });
+
+        // --- GLOBAL STATE ---
+        let dbMeetings = []; 
+        let dbCategories = [];
+        let dbTemplateOpsi = []; 
+        let modalInstance = null;
+        let detailModalInstance = null; 
+        let currentView = 'gallery';
+        let currentPage = 'admin'; 
+        let currentJoinMeetingData = null; 
+        let refreshInterval = null; 
+        let customVars = []; 
+        let dynamicOptionMaps = {}; 
+        let isSimulation = false;
+
+        // --- FETCH API WRAPPER ---
+        async function fetchAPI(action, payloadData = null) {
+            if (isSimulation) return simulateAPI(action, payloadData);
+
+            if (payloadData === null) {
+                const url = new URL(SCRIPT_URL);
+                url.searchParams.append('action', action);
+                const response = await fetch(url);
+                return await response.json();
+            } else {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: action, data: payloadData })
+                });
+                return await response.json();
+            }
+        }
+
+        window.onload = function() {
+            modalInstance = new bootstrap.Modal(document.getElementById('meetingModal'));
+            detailModalInstance = new bootstrap.Modal(document.getElementById('detailModal'));
+            
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page') || 'admin';
+
+            if (SCRIPT_URL === "URL_APPSCRIPT_ANDA_DISINI" || SCRIPT_URL.trim() === "") {
+                SwalDark.fire('Mode Simulasi', 'URL Apps Script belum diisi di kode HTML. Mengaktifkan dummy data.', 'info');
+                isSimulation = true;
+            }
+
+            routeApp(page);
+        };
+
+        function routeApp(page) {
+            currentPage = page;
+            if (currentPage === 'join') {
+                document.getElementById('joinView').classList.remove('hidden');
+                document.getElementById('adminView').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('hidden'); 
+                loadJoinMeetingData();
+            } else {
+                document.getElementById('adminView').classList.remove('hidden');
+                document.getElementById('joinView').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.add('hidden'); 
+                checkLogin();
+            }
+        }
+
+        function copyGlobalLink() {
+            const joinLink = window.location.href.split('?')[0] + "?page=join";
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(joinLink).then(() => { SwalDark.fire({toast:true, position:'top-end', title: 'Link Tersalin!', icon: 'success', timer: 2000, showConfirmButton: false}); });
+            } else {
+                let ta = document.createElement("textarea"); ta.value = joinLink; ta.style.position = "fixed"; document.body.appendChild(ta); ta.focus(); ta.select();
+                try { document.execCommand('copy'); SwalDark.fire({toast:true, position:'top-end', title: 'Link Tersalin!', icon: 'success', timer: 2000, showConfirmButton: false}); } 
+                catch (err) { SwalDark.fire('Gagal', 'Salin manual: ' + joinLink, 'error'); }
+                document.body.removeChild(ta);
+            }
+        }
+
+        function checkLogin() {
+            SwalDark.fire({
+                title: 'Akses Admin',
+                html: '<input type="password" id="swal-input-pwd" class="form-control bg-dark text-white border-secondary text-center fs-4 mt-3" style="letter-spacing:10px; height: 60px; border-radius: 16px;" placeholder="••••••••">',
+                showCancelButton: false, confirmButtonText: 'Masuk Ke Dashboard',
+                allowOutsideClick: false, allowEscapeKey: false,
+                didOpen: () => {
+                    const input = document.getElementById('swal-input-pwd');
+                    input.focus();
+                    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') SwalDark.clickConfirm(); });
+                },
+                preConfirm: () => document.getElementById('swal-input-pwd').value
+            }).then((result) => {
+                if (result.value === 'admin123') { loadDataAdmin(false); } 
+                else { SwalDark.fire('Ditolak', 'Kredensial tidak valid.', 'error').then(checkLogin); }
+            });
+        }
+
+        function toggleLoadingOverlay(show, text = 'Memproses...') {
+            const overlay = document.getElementById('loadingOverlay');
+            document.getElementById('loadingText').innerText = text;
+            if(show) overlay.classList.remove('hidden');
+            else overlay.classList.add('hidden');
+        }
+
+        async function loadDataAdmin(silent = false) {
+            if(!silent) toggleLoadingOverlay(true, 'Sinkronisasi Cloud...');
+            
+            try {
+                const res = await fetchAPI('getAdminData');
+                dbMeetings = res.meetings; 
+                dbCategories = res.categories;
+                dbTemplateOpsi = res.templateOpsi || []; 
+                
+                const isModalOpen = document.getElementById('meetingModal').classList.contains('show') || document.getElementById('detailModal').classList.contains('show');
+                if(!isModalOpen) renderUI(); 
+                if(!silent) toggleLoadingOverlay(false); 
+                startAutoRefresh();
+            } catch (err) {
+                if(!silent) {
+                    toggleLoadingOverlay(false);
+                    SwalDark.fire('Error', 'Gagal memuat data dari server.', 'error');
+                }
+            }
+        }
+
+        function startAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                if (currentPage === 'admin') {
+                    const isModalOpen = document.getElementById('meetingModal').classList.contains('show') || document.getElementById('detailModal').classList.contains('show');
+                    if (!isModalOpen) loadDataAdmin(true); 
+                }
+            }, 10000); 
+        }
+
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr) return "-";
+            let d;
+            // Deteksi jika dari backend format yyyy-MM-dd
+            if (dateStr.includes('-')) {
+                const parts = dateStr.split(' ')[0].split('-');
+                if(parts.length === 3) d = new Date(parts[0], parseInt(parts[1])-1, parts[2]);
+            }
+            if (!d || isNaN(d.getTime())) d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function toggleView(view) {
+            currentView = view;
+            document.getElementById('btnGallery').className = `btn btn-sm rounded-pill px-3 py-1 ${view === 'gallery' ? 'btn-primary' : 'btn-dark border-0'}`;
+            document.getElementById('btnList').className = `btn btn-sm rounded-pill px-3 py-1 ${view === 'list' ? 'btn-primary' : 'btn-dark border-0'}`;
+            renderUI();
+        }
+
+        function autoExtractZoom(urlStr) {
+            if (!urlStr) return;
+            try {
+                const url = new URL(urlStr);
+                const pathParts = url.pathname.split('/');
+                const jIndex = pathParts.indexOf('j');
+                if (jIndex !== -1 && pathParts.length > jIndex + 1) document.getElementById('inputZoomId').value = pathParts[jIndex + 1];
+                const pwd = url.searchParams.get('pwd');
+                if (pwd) document.getElementById('inputPwd').value = pwd;
+            } catch (e) {}
+        }
+
+        function getStatusClass(status) {
+            if(status === 'Mulai') return 'status-Mulai';
+            if(status === 'Aktif') return 'status-Aktif';
+            return 'status-Tidak_Aktif'; 
+        }
+
+        async function togglePin(id) {
+            await fetchAPI('togglePin', { id: id });
+            loadDataAdmin(true);
+        }
+
+        function renderUI() {
+            const container = document.getElementById('meetingList');
+            container.innerHTML = '';
+
+            if (dbMeetings.length === 0) {
+                container.innerHTML = `<div class="text-center p-5 card-custom text-muted mt-4"><i class="bi bi-inbox fs-1 mb-3 d-block"></i><h5>Belum ada meeting yang dijadwalkan.</h5></div>`;
+                return;
+            }
+
+            let sortedMeetings = [...dbMeetings].sort((a,b) => {
+                let pA = a.sematkan === 'Ya' ? 1 : 0;
+                let pB = b.sematkan === 'Ya' ? 1 : 0;
+                return pB - pA;
+            });
+
+            const buildButtons = (m) => {
+                let btnMulai = ''; let btnAktif = ''; let btnDetail = ''; let btnEdit = ''; let btnHapus = '';
+                btnDetail = `<button class="btn btn-sm btn-info text-white flex-fill fw-bold rounded-pill" onclick="viewDetails('${m.id}')">Detail</button>`;
+                
+                if (m.status === 'Tidak Aktif' || m.status === 'Selesai') {
+                    btnMulai = `<button class="btn btn-sm btn-dark flex-fill fw-bold rounded-pill" disabled>Mulai</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-success flex-fill fw-bold rounded-pill" onclick="handleToggleStatus('${m.id}', 'Aktif')">Aktifkan</button>`;
+                    btnEdit = `<button class="btn btn-sm btn-secondary flex-fill fw-bold rounded-pill" disabled>Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-outline-danger flex-fill fw-bold rounded-pill" onclick="handleDelete('${m.id}')">Hapus</button>`; 
+                } else if (m.status === 'Aktif') {
+                    btnMulai = `<button class="btn btn-sm btn-gradient flex-fill fw-bold rounded-pill" onclick="handleToggleStatus('${m.id}', 'Mulai')">Mulai</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-secondary flex-fill fw-bold rounded-pill" onclick="handleToggleStatus('${m.id}', 'Tidak Aktif')">Nonaktif</button>`; 
+                    btnEdit = `<button class="btn btn-sm btn-warning flex-fill fw-bold rounded-pill" onclick="openModal('edit', '${m.id}')">Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-secondary flex-fill fw-bold rounded-pill" disabled>Hapus</button>`;
+                } else if (m.status === 'Mulai') {
+                    btnMulai = `<button class="btn btn-sm btn-dark flex-fill fw-bold rounded-pill border-secondary" onclick="handleToggleStatus('${m.id}', 'Aktif')">Akhiri Zoom</button>`; 
+                    btnAktif = `<button class="btn btn-sm btn-secondary flex-fill fw-bold rounded-pill" onclick="handleToggleStatus('${m.id}', 'Tidak Aktif')">Nonaktif</button>`; 
+                    btnEdit = `<button class="btn btn-sm btn-warning flex-fill fw-bold rounded-pill" onclick="openModal('edit', '${m.id}')">Edit</button>`; 
+                    btnHapus = `<button class="btn btn-sm btn-secondary flex-fill fw-bold rounded-pill" disabled>Hapus</button>`; 
+                }
+                return `${btnMulai} ${btnAktif} ${btnDetail} ${btnEdit} ${btnHapus}`;
+            };
+
+            if (currentView === 'gallery') {
+                container.className = 'row g-4';
+                sortedMeetings.forEach(m => {
+                    let pct = m.target > 0 ? Math.round((m.hadir / m.target) * 100) : 0;
+                    let pinIcon = `<i class="bi bi-pin-angle-fill fs-5 ${m.sematkan === 'Ya' ? 'text-warning' : 'text-secondary'}" style="cursor:pointer;" onclick="togglePin('${m.id}')" title="Sematkan"></i>`;
+                    
+                    container.innerHTML += `
+                        <div class="col-lg-6">
+                            <div class="card card-custom h-100 ${m.sematkan === 'Ya' ? 'card-pinned' : ''}">
+                                <div class="card-body p-4 position-relative">
+                                    <div class="position-absolute" style="top: 20px; right: 20px;">${pinIcon}</div>
+                                    <div class="d-flex justify-content-between align-items-start mb-3 pe-4">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-2 text-uppercase" style="letter-spacing:1px;"><i class="bi bi-calendar2-event text-info me-1"></i> ${formatTanggalIndo(m.tanggal)}</span>
+                                            <span class="badge bg-dark border border-secondary text-light small"><i class="bi bi-people-fill text-primary"></i> Tgt: ${m.target} | Hdr: ${m.hadir} <span class="text-info ms-1">(${pct}%)</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 mt-2">
+                                        <span class="status-badge d-inline-block mb-2 ${getStatusClass(m.status)}">${m.status}</span>
+                                        <h4 class="fw-bold text-white m-0" style="letter-spacing: -0.5px;">${m.nama}</h4>
+                                    </div>
+                                    <div class="d-flex gap-2 p-3 rounded-4 mb-4" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
+                                        <div class="w-50 border-end border-secondary"><small class="d-block text-muted mb-1 text-uppercase" style="font-size:0.7rem">Meeting ID</small><strong class="font-monospace text-light">${m.zoomId}</strong></div>
+                                        <div class="w-50 ps-2"><small class="d-block text-muted mb-1 text-uppercase" style="font-size:0.7rem">Passcode</small><strong class="font-monospace text-light">${m.pwd}</strong></div>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        ${buildButtons(m)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                container.className = 'table-responsive rounded-4';
+                container.style.border = '1px solid rgba(255,255,255,0.1)';
+                let tbody = '';
+                sortedMeetings.forEach(m => {
+                    let pct = m.target > 0 ? Math.round((m.hadir / m.target) * 100) : 0;
+                    let pinIcon = `<i class="bi bi-pin-angle-fill me-3 fs-5 ${m.sematkan === 'Ya' ? 'text-warning' : 'text-secondary'}" style="cursor:pointer;" onclick="togglePin('${m.id}')" title="Sematkan"></i>`;
+                    
+                    tbody += `
+                        <tr class="${m.sematkan === 'Ya' ? 'table-active' : ''}">
+                            <td class="ps-4 py-3 align-middle">
+                                <div class="d-flex align-items-center h-100">
+                                    ${pinIcon}
+                                    <div>
+                                        <div class="fw-bold text-light fs-6">${m.nama}</div>
+                                        <small class="text-muted d-block mt-1">${formatTanggalIndo(m.tanggal)} &bull; <span class="text-info fw-bold">Hadir: ${m.hadir} (${pct}%)</span></small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="font-monospace small align-middle text-light"><span class="text-muted">ID:</span> ${m.zoomId}<br><span class="text-muted">PW:</span> ${m.pwd}</td>
+                            <td class="align-middle"><span class="status-badge ${getStatusClass(m.status)}">${m.status}</span></td>
+                            <td class="text-end pe-4 align-middle">
+                                <div class="d-flex gap-2 justify-content-end align-items-center h-100">
+                                    ${buildButtons(m)}
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+                container.innerHTML = `<table class="table table-custom mb-0" style="background: rgba(15,23,42,0.8); backdrop-filter: blur(10px);"><thead><tr><th class="ps-4 py-3">Info Meeting</th><th>Akses Zoom</th><th>Status</th><th class="text-end pe-4">Aksi Kontrol</th></tr></thead><tbody>${tbody}</tbody></table>`;
+            }
+        }
+
+        function addCustomVar() {
+            if (customVars.length >= 5) { SwalDark.fire('Batas Maksimal', 'Maksimal 5 variabel diperbolehkan.', 'warning'); return; }
+            const idx = customVars.length + 1;
+            customVars.push({ id: `variabel_${idx}`, label: '', type: 'text', options: '' });
+            renderCustomVars();
+        }
+
+        function removeCustomVar(index) {
+            customVars.splice(index, 1);
+            customVars.forEach((v, i) => { v.id = `variabel_${i+1}`; });
+            renderCustomVars();
+        }
+
+        function updateCustomVar(index, field, value) {
+            customVars[index][field] = value;
+            if (field === 'type') { renderCustomVars(); } 
+        }
+
+        function applyTemplate(index, selectEl) {
+            const val = selectEl.value;
+            if(val === '') return;
+            customVars[index].options = dbTemplateOpsi[val].opsi;
+            renderCustomVars(); 
+        }
+
+        function renderCustomVars() {
+            const container = document.getElementById('customVarsContainer');
+            container.innerHTML = '';
+            
+            customVars.forEach((v, i) => {
+                let isChoice = v.type === 'radio' || v.type === 'dropdown';
+                let optionsHtml = '';
+                
+                if (isChoice) {
+                    let templateDropdown = dbTemplateOpsi.length > 0 ? `
+                        <select class="form-select form-select-sm mt-2 fw-semibold border-primary text-light" style="background-color: rgba(59, 130, 246, 0.1);" onchange="applyTemplate(${i}, this)">
+                            <option value="">-- Pilih Template Jawaban Cepat --</option>
+                            ${dbTemplateOpsi.map((t, idx) => `<option value="${idx}">${t.nama}</option>`).join('')}
+                        </select>
+                    ` : '';
+
+                    optionsHtml = `
+                        ${templateDropdown}
+                        <textarea class="form-control form-control-sm mt-2 font-monospace" rows="2" placeholder="{Tampil} {Nilai Zoom}" onchange="updateCustomVar(${i}, 'options', this.value)">${v.options}</textarea>
+                    `;
+                }
+                    
+                container.innerHTML += `
+                    <div class="var-row">
+                        <button type="button" class="btn btn-remove" onclick="removeCustomVar(${i})"><i class="bi bi-x"></i></button>
+                        <div class="row align-items-start g-3">
+                            <div class="col-12 col-md-4">
+                                <span class="badge bg-dark border border-secondary mb-2 w-100 py-2 fs-6">Variabel ${i+1} <small class="text-muted fw-normal">(${v.id})</small></span>
+                                <select class="form-select fw-semibold" onchange="updateCustomVar(${i}, 'type', this.value)">
+                                    <option value="text" ${v.type==='text'?'selected':''}>Teks Bebas</option>
+                                    <option value="number" ${v.type==='number'?'selected':''}>Angka / Nomor</option>
+                                    <option value="radio" ${v.type==='radio'?'selected':''}>Pilihan Ganda (Radio)</option>
+                                    <option value="dropdown" ${v.type==='dropdown'?'selected':''}>Dropdown Autocomplete</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="text" class="form-control fw-bold" placeholder="Tulis Pertanyaan Disini..." value="${v.label}" onchange="updateCustomVar(${i}, 'label', this.value)">
+                                ${optionsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('btnAddVar').style.display = customVars.length >= 5 ? 'none' : 'inline-block';
+        }
+
+        function renderCheckboxes(selectedCatsStr) {
+            const container = document.getElementById('kategoriContainer');
+            container.innerHTML = '';
+            let selectedArr = selectedCatsStr ? selectedCatsStr.split(',').map(c => c.trim()) : [];
+
+            if(dbCategories.length === 0) {
+                container.innerHTML = `<span class="text-muted small px-2 py-1"><i class="bi bi-info-circle me-1"></i> Data sheet 'Daftar' kosong.</span>`;
+                return;
+            }
+
+            dbCategories.forEach((cat, idx) => {
+                let checked = selectedArr.includes(cat) ? 'checked' : '';
+                let id = 'cat_' + idx;
+                container.innerHTML += `
+                    <label class="cat-box ${checked ? 'checked' : ''}" for="${id}">
+                        <input type="checkbox" id="${id}" value="${cat}" class="cat-input" ${checked} onchange="this.parentElement.classList.toggle('checked')">
+                        ${cat}
+                    </label>
+                `;
+            });
+        }
+
+        function openModal(mode, id = null) {
+            document.getElementById('meetingForm').reset();
+            document.getElementById('inputId').value = '';
+            customVars = []; 
+            document.getElementById('modalTitle').innerHTML = mode === 'add' ? '<i class="bi bi-plus-circle text-primary me-2"></i> Buat Meeting Baru' : '<i class="bi bi-pencil-square text-warning me-2"></i> Edit Meeting';
+            
+            var tab1 = new bootstrap.Tab(document.getElementById('tab-meeting'));
+            tab1.show();
+
+            let catStr = "";
+            if (mode === 'edit') {
+                const data = dbMeetings.find(m => m.id === id);
+                if (data) {
+                    document.getElementById('inputId').value = data.id;
+                    document.getElementById('inputStatus').value = data.status;
+                    document.getElementById('inputNama').value = data.nama;
+                    document.getElementById('inputTanggal').value = data.tanggal;
+                    document.getElementById('inputLink').value = data.link;
+                    document.getElementById('inputZoomId').value = data.zoomId;
+                    document.getElementById('inputPwd').value = data.pwd;
+                    document.getElementById('inputNameFormat').value = data.nameFormat || '';
+                    catStr = data.kategori || '';
+                    if(data.formConfig) { try { customVars = JSON.parse(data.formConfig); } catch(e){} }
+                }
+            } else {
+                customVars = [{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}];
+                document.getElementById('inputNameFormat').value = '{variabel_1}';
+            }
+            renderCheckboxes(catStr);
+            renderCustomVars();
+            modalInstance.show();
+        }
+
+        async function saveMeetingManual() {
+            if(!document.getElementById('inputNama').value) return SwalDark.fire('Info', 'Nama Meeting wajib diisi.', 'warning');
+            if(!document.getElementById('inputTanggal').value) return SwalDark.fire('Info', 'Tanggal wajib diisi.', 'warning');
+            if(!document.getElementById('inputLink').value) return SwalDark.fire('Info', 'Link Zoom wajib diisi.', 'warning');
+            if(!document.getElementById('inputNameFormat').value) return SwalDark.fire('Info', 'Format Nama Zoom wajib diisi.', 'warning');
+            if(customVars.length === 0) return SwalDark.fire('Info', 'Minimal 1 variabel pertanyaan.', 'error');
+
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...'; btn.disabled = true;
+
+            let cats = [];
+            document.querySelectorAll('.cat-input:checked').forEach(c => cats.push(c.value));
+
+            const payload = {
+                id: document.getElementById('inputId').value, 
+                nama: document.getElementById('inputNama').value,
+                tanggal: document.getElementById('inputTanggal').value, 
+                link: document.getElementById('inputLink').value,
+                zoomId: document.getElementById('inputZoomId').value.replace(/\s/g, ''), 
+                pwd: document.getElementById('inputPwd').value,
+                status: document.getElementById('inputStatus').value || 'Aktif',
+                formConfig: JSON.stringify(customVars),
+                nameFormat: document.getElementById('inputNameFormat').value,
+                kategori: cats.join(', ')
+            };
+
+            const isEdit = payload.id !== '';
+            
+            try {
+                await fetchAPI(isEdit ? 'editMeeting' : 'addMeeting', payload);
+                modalInstance.hide(); 
+                btn.innerHTML = 'Simpan Data'; btn.disabled = false; 
+                loadDataAdmin(false);
+            } catch(e) {
+                btn.innerHTML = 'Simpan Data'; btn.disabled = false;
+                SwalDark.fire('Error', 'Gagal menyimpan ke server.', 'error');
+            }
+        }
+
+        function handleToggleStatus(id, targetStatus) {
+            let label = ""; let text = ""; let iconType = "question";
+            if(targetStatus === 'Aktif') {
+                label = 'Aktifkan Meeting?';
+                text = 'Meeting akan tersedia dalam mode standby.';
+            } else if(targetStatus === 'Mulai') {
+                label = 'Mulai Registrasi?';
+                text = 'Otomatis menutup registrasi meeting lain yang sedang berjalan.';
+                iconType = 'info';
+            } else if(targetStatus === 'Selesai') {
+                label = 'Selesaikan Meeting?';
+                text = 'Meeting akan ditandai selesai.';
+            } else {
+                label = 'Nonaktifkan Meeting?';
+                text = 'Akan disembunyikan dari status aktif.';
+                iconType = 'warning';
+            }
+
+            SwalDark.fire({ title: label, text: text, icon: iconType, showCancelButton: true, confirmButtonText: `Lanjutkan`, confirmButtonColor: '#3b82f6'
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    toggleLoadingOverlay(true, 'Memproses Perubahan...');
+                    await fetchAPI('toggleMeetingStatus', { id: id, status: targetStatus });
+                    loadDataAdmin(false);
+                }
+            });
+        }
+
+        function handleDelete(id) {
+            SwalDark.fire({ title: 'Hapus Permanen?', text: "Data tidak dapat dikembalikan", icon: 'warning', showCancelButton: true, confirmButtonText: 'Hapus', confirmButtonColor: '#ef4444'
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    toggleLoadingOverlay(true, 'Menghapus...');
+                    await fetchAPI('deleteMeeting', { id: id });
+                    loadDataAdmin(false);
+                }
+            });
+        }
+
+        async function viewDetails(id) {
+            detailModalInstance.show();
+            document.getElementById('loadingAnalytics').classList.remove('hidden');
+            document.getElementById('contentAnalytics').classList.add('hidden');
+            
+            try {
+                const result = await fetchAPI('getMeetingAnalytics', { id: id });
+                if (result.error) {
+                    document.getElementById('loadingAnalytics').innerHTML = `<div class="text-danger p-4 text-center"><h5>Error Server</h5><p>${result.error}</p></div>`;
+                    return;
+                }
+                renderDetails(result);
+            } catch(e) {
+                document.getElementById('loadingAnalytics').innerHTML = '<p class="text-danger text-center mt-4">Koneksi Terputus, Gagal Memuat Data</p>';
+            }
+        }
+
+        function renderDetails(data) {
+            document.getElementById('loadingAnalytics').classList.add('hidden');
+            document.getElementById('contentAnalytics').classList.remove('hidden');
+            
+            let pct = data.target > 0 ? Math.round((data.total / data.target) * 100) : 0;
+            document.getElementById('statTarget').innerText = data.target;
+            document.getElementById('statTotal').innerText = `${data.total} (${pct}%)`;
+            document.getElementById('statTerdaftar').innerText = data.terdaftar;
+            document.getElementById('statTamu').innerText = data.tamu;
+            
+            const tbody = document.getElementById('detailTableBody');
+            tbody.innerHTML = '';
+            
+            if(data.list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5"><i class="bi bi-clock-history fs-3 d-block mb-2"></i> Belum ada aktivitas partisipan.</td></tr>`;
+            } else {
+                data.list.forEach(item => {
+                    const timeStr = String(item.waktu).split(' ')[1] || item.waktu;
+                    // FIX: Penambahan class align-middle ke masing-masing td agar sejajar dengan thead
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="ps-4 py-3 small text-muted font-monospace align-middle">${timeStr}</td>
+                            <td class="small text-info font-monospace align-middle">${item.wa}</td>
+                            <td class="fw-semibold text-light align-middle">${item.nama}</td>
+                            <td class="align-middle text-center"><span class="status-${item.status}">${item.status}</span></td>
+                            <td class="text-center fw-bold text-accent pe-4 align-middle">${item.count}x</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        async function loadJoinMeetingData() {
+            try {
+                const res = await fetchAPI('getActiveJoinMeeting');
+                if (res && res.id) { 
+                    currentJoinMeetingData = res; 
+                    renderJoinUI(); 
+                } else { 
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                    document.getElementById('step1').classList.add('hidden'); 
+                    SwalDark.fire({title: 'Jadwal Kosong', text: 'Saat ini belum ada meeting yang dibuka. Silakan tunggu instruksi panitia.', icon: 'info', showConfirmButton: false, allowOutsideClick: false}); 
+                    document.getElementById('joinMeetingName').innerText = "Standby Mode";
+                    document.getElementById('joinMeetingDate').innerText = "-";
+                }
+            } catch(e) {
+                SwalDark.fire('Error', 'Gagal menghubungi server.', 'error');
+            }
+        }
+
+        function renderJoinUI() {
+            toggleLoadingOverlay(false);
+            document.getElementById('joinMeetingName').innerText = currentJoinMeetingData.nama;
+            document.getElementById('joinMeetingDate').innerText = formatTanggalIndo(currentJoinMeetingData.tanggal);
+        }
+
+        function formatWAInput(inputElement) {
+            let val = inputElement.value.replace(/\D/g, ''); 
+            if (val.startsWith('08')) val = '628' + val.substring(2);
+            inputElement.value = val;
+        }
+
+        let tempWaInput = ""; 
+
+        async function handleCheckWA(e) {
+            e.preventDefault();
+            const waInput = document.getElementById('inputWaJoin').value;
+            if(waInput.length < 9) { SwalDark.fire('Perhatian', 'Nomor WhatsApp tidak valid.', 'warning'); return; }
+
+            const btn = document.getElementById('btnCheckWa');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memverifikasi Data...'; btn.disabled = true;
+            tempWaInput = waInput;
+
+            try {
+                const url = new URL(SCRIPT_URL);
+                url.searchParams.append('action', 'verifyParticipant');
+                url.searchParams.append('meetingId', currentJoinMeetingData.id);
+                url.searchParams.append('wa', waInput);
+                const res = await fetch(url).then(r => r.json());
+
+                btn.innerHTML = orig; btn.disabled = false;
+                
+                if (res.status === 'whitelist') {
+                    let nameFormat = currentJoinMeetingData.nameFormat || '{variabel_1}';
+                    let finalName = nameFormat;
+                    for (let i = 1; i <= 5; i++) {
+                        finalName = finalName.replace(new RegExp(`\\{variabel_${i}\\}`, 'g'), res.vars[`variabel_${i}`] || '');
+                    }
+                    finalName = finalName.replace(/\{variabel_\d+\}/g, '').trim(); 
+                    processJoinDirect(finalName, "Terdaftar", finalName, res.vars);
+                } else if (res.status === 'found_in_aktivitas') {
+                    showStep2DynamicForm(res.vars);
+                } else {
+                    showStep2DynamicForm();
+                }
+            } catch (err) {
+                btn.innerHTML = orig; btn.disabled = false;
+                SwalDark.fire('Error', 'Koneksi terputus. Coba lagi.', 'error');
+            }
+        }
+
+        function showStep2DynamicForm(pastVars = null) {
+            const container = document.getElementById('dynamicFormContainer');
+            container.innerHTML = '';
+            dynamicOptionMaps = {}; 
+            
+            let config = [];
+            try { config = JSON.parse(currentJoinMeetingData.formConfig); } catch(e){}
+            if(!config || config.length === 0) config = [{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text'}];
+
+            let html = '';
+            config.forEach((v, index) => {
+                dynamicOptionMaps[v.id] = {}; 
+                
+                html += `<div class="mb-3">
+                            <label class="form-label text-muted fw-bold small text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing:0.5px;">${v.label}</label>
+                            <div class="input-group-custom">`;
+
+                if(v.type === 'text') {
+                    html += `<i class="bi bi-person-badge icon-input"></i><input type="text" class="form-control uppercase-input" id="join_${v.id}" placeholder="Ketik disini..." required autocomplete="off">`;
+                    html += `</div></div>`;
+                } else if (v.type === 'number') {
+                    html += `<i class="bi bi-123 icon-input"></i><input type="number" class="form-control" id="join_${v.id}" placeholder="Angka..." required autocomplete="off">`;
+                    html += `</div></div>`;
+                } else {
+                    let parsedOpts = [];
+                    if(v.options) {
+                        let lines = v.options.split('\n');
+                        lines.forEach(line => {
+                            let txt = line.trim();
+                            if(!txt) return; 
+                            let match = txt.match(/^\{(.+?)\}\s*\{(.+?)\}$/);
+                            if(match) {
+                                parsedOpts.push({ display: match[1].trim(), value: match[2].trim() });
+                                dynamicOptionMaps[v.id][match[1].trim().toUpperCase()] = match[2].trim();
+                            }
+                        });
+                    }
+
+                    if (v.type === 'radio') {
+                        html += `</div>`; 
+                        html += `<div class="mt-2 p-2 rounded-4" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);">`;
+                        parsedOpts.forEach((opt, idx) => {
+                            html += `<label class="form-check-custom">
+                                        <input type="radio" name="join_${v.id}" value="${opt.display}" required>
+                                        ${opt.display}
+                                     </label>`;
+                        });
+                        html += `</div><div></div></div>`; 
+                    } else if (v.type === 'dropdown') {
+                        let dl_id = `list_${v.id}`;
+                        html += `<div class="custom-dropdown-container w-100 position-relative">
+                                 <i class="bi bi-search icon-input"></i>
+                                 <input type="text" class="form-control uppercase-input dropdown-display" id="disp_${v.id}" placeholder="Cari opsi..." required autocomplete="off" onfocus="showDropdown('${v.id}')" onclick="showDropdown('${v.id}')" onkeyup="filterDropdown('${v.id}')" onblur="validateDropdown('${v.id}')">
+                                 <input type="hidden" id="join_${v.id}" class="dropdown-hidden-val">
+                                 <ul class="dropdown-menu shadow-lg custom-dropdown-list" id="${dl_id}">`;
+                        
+                        parsedOpts.forEach(opt => {
+                            html += `<li class="dropdown-item py-2 custom-opt" data-display="${opt.display}" onmousedown="selectOption('${v.id}', '${opt.display}')" onclick="selectOption('${v.id}', '${opt.display}')">${opt.display}</li>`;
+                        });
+                        html += `</ul></div></div></div>`;
+                    }
+                }
+            });
+
+            container.innerHTML = html;
+            document.getElementById('titleStep2').innerText = pastVars ? "Konfirmasi Data Terakhir" : "Lengkapi Form";
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            if (pastVars) {
+                setTimeout(() => {
+                    config.forEach(v => {
+                        let savedVal = pastVars[v.id];
+                        if (savedVal) {
+                            if (v.type === 'text' || v.type === 'number') {
+                                let el = document.getElementById(`join_${v.id}`);
+                                if (el) el.value = savedVal;
+                            } else if (v.type === 'radio') {
+                                let rads = document.getElementsByName(`join_${v.id}`);
+                                for (let r of rads) {
+                                    if (r.value.toUpperCase() === savedVal.toUpperCase() || r.value === savedVal) r.checked = true;
+                                }
+                            } else if (v.type === 'dropdown') {
+                                let dispEl = document.getElementById(`disp_${v.id}`);
+                                let hidEl = document.getElementById(`join_${v.id}`);
+                                if (dispEl) dispEl.value = savedVal;
+                                if (hidEl) hidEl.value = savedVal;
+                            }
+                        }
+                    });
+                }, 0);
+            }
+        }
+
+        function showDropdown(id) { document.getElementById(`list_${id}`).classList.add('show'); }
+
+        function filterDropdown(id) {
+            let input = document.getElementById(`disp_${id}`);
+            let filter = input.value.toUpperCase();
+            let ul = document.getElementById(`list_${id}`);
+            ul.classList.add('show');
+            let li = ul.getElementsByTagName("li");
+            
+            for (let i = 0; i < li.length; i++) {
+                let txtValue = li[i].textContent || li[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) li[i].style.display = "";
+                else li[i].style.display = "none";
+            }
+            document.getElementById(`join_${id}`).value = ''; 
+        }
+
+        function selectOption(id, displayValue) {
+            document.getElementById(`disp_${id}`).value = displayValue;
+            document.getElementById(`join_${id}`).value = displayValue;
+            let ul = document.getElementById(`list_${id}`);
+            if (ul) ul.classList.remove('show');
+        }
+
+        function validateDropdown(id) {
+            setTimeout(() => {
+                let disp = document.getElementById(`disp_${id}`);
+                let hidden = document.getElementById(`join_${id}`);
+                let ul = document.getElementById(`list_${id}`);
+                if (ul) ul.classList.remove('show');
+                if (disp && hidden && disp.value && !hidden.value) disp.value = ''; 
+            }, 200);
+        }
+
+        function backToStep1() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        function handleJoinDynamic(e) {
+            e.preventDefault();
+            
+            let config = [];
+            try { config = JSON.parse(currentJoinMeetingData.formConfig); } catch(e){}
+            if(config.length === 0) config = [{id: 'variabel_1'}];
+            
+            let nameFormat = currentJoinMeetingData.nameFormat || '{variabel_1}';
+            let finalName = nameFormat;
+            let dynamicVars = {}; 
+            
+            for(let v of config) {
+                let val = '';
+                if(v.type === 'radio') {
+                    let rads = document.getElementsByName(`join_${v.id}`);
+                    let isChecked = false;
+                    for(let r of rads) { 
+                        if(r.checked) { val = r.value; isChecked = true; } 
+                    }
+                    if(!isChecked) {
+                        return SwalDark.fire('Perhatian', `Silakan pilih salah satu jawaban pada bagian: ${v.label}`, 'warning');
+                    }
+                } else if (v.type === 'dropdown') {
+                    let disp = document.getElementById(`disp_${v.id}`).value;
+                    val = document.getElementById(`join_${v.id}`).value;
+                    if (!val || !val.trim() || !disp.trim()) {
+                        document.getElementById(`disp_${v.id}`).value = '';
+                        return SwalDark.fire('Perhatian', `Pada bagian "${v.label}", Anda wajib memilih opsi yang tersedia dari daftar, tidak boleh diisi jawaban lain.`, 'warning');
+                    }
+                } else {
+                    val = document.getElementById(`join_${v.id}`).value;
+                    if (!val || !val.trim()) {
+                        return SwalDark.fire('Perhatian', `Input "${v.label}" tidak boleh kosong atau hanya berisi spasi.`, 'warning');
+                    }
+                }
+                
+                val = val.trim().toUpperCase();
+                dynamicVars[v.id] = val; 
+                
+                let zoomVal = dynamicOptionMaps[v.id] && dynamicOptionMaps[v.id][val] ? dynamicOptionMaps[v.id][val] : val;
+                finalName = finalName.replace(new RegExp(`\\{${v.id}\\}`, 'g'), zoomVal);
+            }
+            
+            finalName = finalName.replace(/\{variabel_\d+\}/g, '').trim(); 
+            
+            let namaAsli = dynamicVars['variabel_1'] || finalName;
+            processJoinDirect(finalName, "Tamu", namaAsli, dynamicVars);
+        }
+
+        function processJoinDirect(namaZoom, statusValidasi, namaAsliInput, dynamicVarsObj) {
+            try {
+                let urlObj = new URL(currentJoinMeetingData.link);
+                urlObj.searchParams.set('uname', namaZoom);
+                const finalLink = urlObj.toString();
+
+                fetchAPI('recordActivity', {
+                    meetingId: currentJoinMeetingData.id, 
+                    namaMeeting: currentJoinMeetingData.nama,
+                    wa: tempWaInput, 
+                    nama: namaZoom, 
+                    status: statusValidasi, 
+                    linkZoom: finalLink,
+                    vars: dynamicVarsObj 
+                });
+
+                SwalDark.fire({ title: 'Otentikasi Berhasil!', text: 'Membuka Zoom client...', icon: 'success', timer: 1500, showConfirmButton: false 
+                }).then(() => {
+                    let newWin = window.open(finalLink, '_blank');
+                    if(!newWin) { window.location.href = finalLink; } 
+                    else {
+                         document.getElementById('inputWaJoin').value = '';
+                         if(!document.getElementById('step2').classList.contains('hidden')){ backToStep1(); }
+                    }
+                });
+            } catch (err) {
+                let newWin = window.open(currentJoinMeetingData.link, '_blank');
+                if(!newWin) window.location.href = currentJoinMeetingData.link;
+            }
+        }
+
+        // --- SIMULASI ---
+        function simulateAPI(action, data) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    if (action === 'getAdminData') {
+                        return resolve({
+                            categories: ['DPP', 'Lajnah Dai', 'Umum'],
+                            templateOpsi: [
+                                {nama: 'Kab Kota', opsi: '{Makassar} {MKS}\n{Gowa} {GWA}'},
+                                {nama: 'Struktural', opsi: '{Ketua Umum} {K.U}\n{Anggota} {ANG}'}
+                            ],
+                            meetings: [{ 
+                                id: "MTG-123", nama: "Webinar UI/UX 2026", tanggal: "2026-08-04", link: "https://zoom.us/j/123", zoomId: "812 3456 7890", pwd: "neon", status: "Mulai", target: 120, hadir: 45, kategori: "DPP, Lajnah Dai", sematkan: "Ya",
+                                formConfig: JSON.stringify([{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}, {id: 'variabel_2', label: 'Asal Daerah', type: 'dropdown', options: '{Makassar} {MKS}'}]),
+                                nameFormat: "{variabel_2} - {variabel_1}"
+                            }]
+                        });
+                    }
+                    if (action === 'getActiveJoinMeeting') {
+                        return resolve({
+                            id: "MTG-123", nama: "Webinar UI/UX 2026", tanggal: "2026-08-04", link: "https://zoom.us/j/123", zoomId: "812 3456 7890", pwd: "neon", status: "Mulai",
+                            formConfig: JSON.stringify([{id: 'variabel_1', label: 'Nama Lengkap Anda', type: 'text', options: ''}, {id: 'variabel_2', label: 'Pilih Wilayah', type: 'dropdown', options: '{Aceh} {A.C}\n{Sumatera Utara} {S.U}\n{Jawa Barat} {J.B}\n{DKI Jakarta} {DKI}\n{Sulawesi Selatan} {SULSEL}\n{Kalimantan Timur} {KALTIM}\n{Papua} {PPA}'}]),
+                            nameFormat: "{variabel_1} ({variabel_2})"
+                        });
+                    }
+                    if (action === 'verifyParticipant') return resolve({ status: 'unregistered' });
+                    if (action === 'getMeetingAnalytics') return resolve({ target: 120, total: 3, terdaftar: 2, tamu: 1, list: [{waktu: "10:00:00", wa: "6281234", nama: "Budi <br><small class='text-muted'>Zoom: MKS - Budi</small>", status: "Terdaftar", count: 2}] });
+                    
+                    resolve({ status: 'success' });
+                }, 500);
+            });
+        }
+    </script>
+</body>
+</html>
